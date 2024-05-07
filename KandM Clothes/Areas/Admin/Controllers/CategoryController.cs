@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KandM_Clothes.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,6 +11,7 @@ namespace KandM_Clothes.Areas.Admin.Controllers
     {
         // GET: Admin/Category
 
+        ApplicationDbContext _dbContext = new ApplicationDbContext();
         public ActionResult Index()
         {
             return View();
