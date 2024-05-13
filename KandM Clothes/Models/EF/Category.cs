@@ -17,9 +17,10 @@ namespace KandM_Clothes.Models.EF
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        [Required(ErrorMessage ="Tên danh mục không được để trống")]  
         public string Title { get; set; }
+        [Required(ErrorMessage = "Miêu tả không được để trống")]
         public string Description { get; set; }
-        public string Icon { get; set; }
         public ICollection<New> News { get; set; }
         public ICollection<Post> Posts { get; set; }
     }

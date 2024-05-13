@@ -31,7 +31,6 @@
                         Id = c.Int(nullable: false, identity: true),
                         Title = c.String(),
                         Description = c.String(),
-                        Icon = c.String(),
                         CreatedBy = c.String(),
                         CreatedDate = c.DateTime(nullable: false),
                         ModifiedBy = c.String(),
