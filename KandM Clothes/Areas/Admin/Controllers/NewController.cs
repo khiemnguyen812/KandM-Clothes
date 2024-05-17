@@ -1,11 +1,13 @@
 ﻿using KandM_Clothes.Models;
 using KandM_Clothes.Models.EF;
 using Microsoft.Ajax.Utilities;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.WebPages;
 
 namespace KandM_Clothes.Areas.Admin.Controllers
 {
@@ -13,10 +15,29 @@ namespace KandM_Clothes.Areas.Admin.Controllers
     {
         ApplicationDbContext _dbContext = new ApplicationDbContext();
         // GET: Admin/New
-        public ActionResult Index()
+        public ActionResult Index(int? page, string searchTxt)
         {
-            var news = _dbContext.News.ToList();
-            return View(news);
+            if (page == null || page < 1)
+            {
+                page = 1;
+            }
+
+            var pageSize = 5;
+            var pageIndex = page.HasValue ? Convert.ToInt32(page.Value) : 1;
+            var news = _dbContext.News.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchTxt))
+            {
+                news = news.Where(n => n.Title.Contains(searchTxt));
+                searchTxt = "";
+            }
+
+            var pagedNews = news.OrderByDescending(x => x.Id).ToPagedList(pageIndex, pageSize);
+            ViewBag.PageSize = pageSize;
+            ViewBag.Page = page;
+            ViewBag.SearchTxt = searchTxt;
+
+            return View(pagedNews);
         }
 
         public ActionResult Add()
