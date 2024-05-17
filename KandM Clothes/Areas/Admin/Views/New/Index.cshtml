@@ -1,5 +1,6 @@
-﻿@model IEnumerable<KandM_Clothes.Models.EF.New>
-
+﻿@model PagedList.PagedList<KandM_Clothes.Models.EF.New>
+@using PagedList.Mvc;
+@using PagedList;
 @{
     ViewBag.Title = "Tin tức";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
@@ -41,6 +42,20 @@
 <!-- Main content -->
 <section class="content">
 
+    @using (Html.BeginForm("Index", "New", FormMethod.Get))
+    {
+        <div class="input-group w-100 mt-4 justify-content-end gx-0 gx-sm-3 gy-3 col-6" style="margin-bottom: 2%; border-radius: 10px;">
+            <span class="input-group-text" id="addon-wrapping" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;"><i class="bi bi-search"></i></span>
+            @Html.TextBox("searchTxt", null, new { @class = "form-control", @placeholder = "Tìm kiếm theo tiêu đề", @aria_label = "find", @aria_describedby = "addon-wrapping", style = "border-radius: 0;" })
+            <span class="input-group-append">
+                <button type="submit" class="btn btn-info btn-flat" style="border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
+                    <i class="fas fa-search"></i>
+                </button>
+            </span>
+        </div>
+    }
+
+
     <!-- Default box -->
     <div class="card">
         <div class="card-header">
@@ -55,7 +70,7 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th><input type="checkbox" id="selectAll"/> </th>
+                        <th><input type="checkbox" id="selectAll" /> </th>
                         <th class="text-center" style="width: 5%;">STT</th>
                         <th class="text-center" style="width: 40%;">Hình ảnh</th>
                         <th class="text-center" style="width: 20%;">Tiêu đề</th>
@@ -73,7 +88,8 @@
                             var active = item.isActive ? "<a href='#'><i class='fa fa-check text-success'></i></a>" : "<a href='#'><i class='fas fa-times text-danger'></i></a>";
                             <tr id="row_@item.Id">
                                 <td><input type="checkbox" class="selectedItem" data-id="@item.Id" /></td>
-                                <td class="text-center">@(listModel.IndexOf(item) + 1)</td>
+                                <td class="text-center">@((ViewBag.Page - 1) * ViewBag.PageSize + listModel.IndexOf(item) + 1)</td>
+
                                 <td class="text-center">
                                     <img src="@item.Image" style="max-width: 100%;" />
                                 </td>
@@ -99,6 +115,9 @@
                     }
                 </tbody>
             </table>
+            <div class="pager-container" style="text-align: right">
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+            </div>
 
         </div>
         <!-- /.card-body -->
@@ -113,6 +132,12 @@
 
 @section scripts{
     <script>
+        function updateSTT() {
+            $("table tbody tr").each(function (index) {
+                $(this).find("td:nth-child(2)").text(index + 1);
+            });
+        }
+
         $(document).ready(function () {
             $('body').on("change", '#selectAll', function () {
                 var checkStatus = $(this).prop('checked');
@@ -144,6 +169,8 @@
                                 })
                                 if ($("tbody tr").length == 0) {
                                     $("tbody").append('<tr><td colspan="4">Không có dữ liệu</td></tr>');
+                                } else {
+                                    updateSTT(); // Update STT after removing a row
                                 }
                             }
                         }
@@ -163,6 +190,8 @@
                                 $("#row_" + id).remove();
                                 if ($("tbody tr").length == 0) {
                                     $("tbody").append('<tr><td colspan="4">Không có dữ liệu</td></tr>');
+                                } else {
+                                    updateSTT(); // Update STT after removing a row
                                 }
                             }
 
