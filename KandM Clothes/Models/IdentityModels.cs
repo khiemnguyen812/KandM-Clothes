@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using KandM_Clothes.Models.EF;
@@ -44,6 +45,16 @@ namespace KandM_Clothes.Models
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
+        }
+
+        public int findCategory(string name)
+        {
+           var category = Categories.FirstOrDefault(x => x.Title == name);
+            if (category != null)
+            {
+                return category.Id;
+            }
+            return 13;
         }
     }
 }

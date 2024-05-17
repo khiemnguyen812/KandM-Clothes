@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "Đăng nhập";
+    Layout = "~/Areas/Admin/Views/Shared/_EmptyLayout .cshtml";
+}
+
+<section class="content">
+    <div class="login">
+        <div class="avatar">
+            <img src="avatar.png" />
+        </div>
+        <h2>Login</h2>
+        <h3>Welcome back Kelly</h3>
+
+        <form class="login-form">
+            <div class="textbox">
+                <input type="email" placeholder="Username" />
+                <span class="fa fa-user" aria-hidden="true"></span>
+            </div>
+            <div class="textbox">
+                <input type="password" placeholder="Password" />
+                <span class="fa fa-unlock-alt" aria-hidden="true"></span>
+            </div>
+            <button type="submit">LOGIN</button>
+            <a href="https://website.com">Forgot your credentials?</a>
+        </form>
+    </div>
+</section>

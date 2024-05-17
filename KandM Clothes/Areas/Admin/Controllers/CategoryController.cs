@@ -57,8 +57,7 @@ namespace KandM_Clothes.Areas.Admin.Controllers
             _dbContext.Categories.Attach(category);
             category.ModifiedDate = DateTime.Now;
             _dbContext.Entry(category).Property(x => x.Title).IsModified = true;
-            _dbContext.Entry(category).Property(x =>
-            x.Description).IsModified = true;
+            _dbContext.Entry(category).Property(x => x.Description).IsModified = true;
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
         }
