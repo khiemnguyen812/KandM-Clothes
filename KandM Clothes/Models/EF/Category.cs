@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using WebGrease.Css.Ast.Selectors;
 
 namespace KandM_Clothes.Models.EF
 {
@@ -23,5 +24,6 @@ namespace KandM_Clothes.Models.EF
         public string Description { get; set; }
         public ICollection<New> News { get; set; }
         public ICollection<Post> Posts { get; set; }
+
     }
 }
