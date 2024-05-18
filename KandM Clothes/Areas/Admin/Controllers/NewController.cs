@@ -4,6 +4,7 @@ using Microsoft.Ajax.Utilities;
 using PagedList;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -29,9 +30,11 @@ namespace KandM_Clothes.Areas.Admin.Controllers
             if (!string.IsNullOrEmpty(searchTxt))
             {
                 news = news.Where(n => n.Title.Contains(searchTxt));
+            }
+            else
+            {
                 searchTxt = "";
             }
-
             var pagedNews = news.OrderByDescending(x => x.Id).ToPagedList(pageIndex, pageSize);
             ViewBag.PageSize = pageSize;
             ViewBag.Page = page;
