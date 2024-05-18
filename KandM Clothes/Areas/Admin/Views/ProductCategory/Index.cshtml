@@ -1,11 +1,8 @@
-﻿@model PagedList.PagedList<KandM_Clothes.Models.EF.New>
-@using PagedList.Mvc;
-@using PagedList;
+﻿@model IEnumerable<KandM_Clothes.Models.EF.ProductCategory>
 @{
-    ViewBag.Title = "Tin tức";
+    ViewBag.Title = "Danh mục sản phẩm";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-
 
 @section naviheader {
     <!-- Left navbar links -->
@@ -17,7 +14,7 @@
             <a href="/admin/home" class="nav-link">Home</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="/admin/new" class="nav-link">Tin tức</a>
+            <a href="/admin/productcategory" class="nav-link">Danh mục sản phẩm</a>
         </li>
     </ul>
 }
@@ -27,42 +24,29 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Quản lý tin tức</h1>
+                <h1>Quản lý danh mục sản phẩm</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item active">Tin tức</li>
+                    <li class="breadcrumb-item active">Danh mục sản phẩm</li>
                 </ol>
             </div>
         </div>
     </div><!-- /.container-fluid -->
 </section>
 
+
 <!-- Main content -->
 <section class="content">
-
-    @using (Html.BeginForm("Index", "New", FormMethod.Get))
-    {
-        <div class="input-group w-100 mt-4 justify-content-end gx-0 gx-sm-3 gy-3 col-6" style="margin-bottom: 2%; border-radius: 10px;">
-            <span class="input-group-text" id="addon-wrapping" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;"><i class="bi bi-search"></i></span>
-            @Html.TextBox("searchTxt", null, new { @class = "form-control", @placeholder = "Tìm kiếm theo tiêu đề", @aria_label = "find", @aria_describedby = "addon-wrapping", style = "border-radius: 0;" })
-            <span class="input-group-append">
-                <button type="submit" class="btn btn-info btn-flat" style="border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
-                    <i class="fas fa-search"></i>
-                </button>
-            </span>
-        </div>
-    }
-
 
     <!-- Default box -->
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title" style="font-size: 30px;">Danh sách tin tức</h3>
+            <h3 class="card-title" style="font-size: 30px;">Danh sách danh mục sản phẩm</h3>
 
             <div class="card-tools">
-                <a href="/admin/new/add" class="btn btn-primary">Thêm mới</a>
+                <a href="/admin/productcategory/add" class="btn btn-primary">Thêm mới</a>
                 <a href="#" class="btn btn-danger" id="btnDeleteAll">Xóa toàn bộ</a>
             </div>
         </div>
@@ -72,9 +56,9 @@
                     <tr>
                         <th><input type="checkbox" id="selectAll" /> </th>
                         <th class="text-center" style="width: 5%;">STT</th>
-                        <th class="text-center" style="width: 40%;">Hình ảnh</th>
-                        <th class="text-center" style="width: 20%;">Tiêu đề</th>
-                        <th class="text-center" style="width: 10%">Hiển thị</th>
+                        <th class="text-center" style="width: 20%;">Tên danh mục</th>
+                        <th class="text-center" style="width: 35%;">Miêu tả</th>
+                        <th class="text-center" style="width: 15%">Icon</th>
                         <th class="text-center" style="width: 15%;">Ngày tạo</th>
                         <th class="text-center" style="width: 10%;">Chức năng</th>
                     </tr>
@@ -88,20 +72,16 @@
                             var active = item.isActive ? "<a href='#'><i class='fa fa-check text-success'></i></a>" : "<a href='#'><i class='fas fa-times text-danger'></i></a>";
                             <tr id="row_@item.Id">
                                 <td><input type="checkbox" class="selectedItem" data-id="@item.Id" /></td>
-                                <td class="text-center">@((ViewBag.Page - 1) * ViewBag.PageSize + listModel.IndexOf(item) + 1)</td>
+                                <td class="text-center">@(listModel.IndexOf(item) + 1)</td>
+                                <td class="text-center">@item.Title</td>
+                                <td class="text-center">@item.Description</td>
+                                <td class="text-center">
+                                    <img src="@item.Icon" style="max-width: 100%;" />
+                                </td>
 
+                                <td class="text-center">@(item.CreatedDate is DateTime date ? date.ToString("dd/MM/yyyy") : "")</td>
                                 <td class="text-center">
-                                    <img src="@item.Image" style="max-width: 100%;" />
-                                </td>
-                                <td>@item.Title</td>
-                                <td class="text-center">
-                                    <a href="#" data-id="@item.Id" class="btnActive">
-                                        <i class='@(item.isActive ? "fa fa-check text-success" : "fas fa-times text-danger")'></i>
-                                    </a>
-                                </td>
-                                <td>@(item.CreatedDate is DateTime date ? date.ToString("dd/MM/yyyy") : "")</td>
-                                <td class="text-center">
-                                    <a href="/admin/new/edit/@item.Id" class="fas fa-pen" style="color: #f29d38;"></a>
+                                    <a href="/admin/productcategory/edit/@item.Id" class="fas fa-pen" style="color: #f29d38;"></a>
                                     <a href="#" class="fas fa-trash btnDelete" style="color: #EB3223;" data-id="@item.Id"></a>
                                 </td>
                             </tr>
@@ -115,9 +95,6 @@
                     }
                 </tbody>
             </table>
-            <div class="pager-container" style="text-align: right">
-                @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
-            </div>
 
         </div>
         <!-- /.card-body -->
@@ -128,7 +105,7 @@
     <!-- /.card -->
 
 </section>
-<!-- /.content -->
+
 
 @section scripts{
     <script>
@@ -159,7 +136,7 @@
                         console.log(id);
                     })
                     $.ajax({
-                        url: "/admin/new/DeleteAll",
+                        url: "/admin/productcategory/DeleteAll",
                         type: "POST",
                         data: { ids: ids },
                         success: function (res) {
@@ -182,7 +159,7 @@
                 console.log(id);
                 if (confirm("Bạn có chắc chắn muốn xóa không?")) {
                     $.ajax({
-                        url: "/admin/new/delete",
+                        url: "/admin/productcategory/delete",
                         type: "POST",
                         data: { id: id },
                         success: function (res) {
@@ -199,23 +176,6 @@
                     })
                 }
             })
-            $("body").on("click", ".btnActive", function (e) {
-                e.preventDefault();
-                var id = $(this).data("id");
-                console.log(id);
-                $.ajax({
-                    url: "/admin/new/isactive",
-                    type: "POST",
-                    data: { id: id },
-                    success: function (res) {
-                        if (res.success) {
-                            var iconClass = res.active ? "fa fa-check text-success" : "fas fa-times text-danger";
-                            $("#row_" + id + " .btnActive i").attr('class', iconClass);
-                        }
-                    }
-                })
-            })
-
         })
-  </script>
+    </script>
 }

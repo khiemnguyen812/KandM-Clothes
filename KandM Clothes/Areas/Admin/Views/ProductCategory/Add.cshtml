@@ -1,6 +1,6 @@
-﻿@model KandM_Clothes.Models.EF.Post
+﻿@model KandM_Clothes.Models.EF.ProductCategory
 @{
-    ViewBag.Title = "Thêm mới bài viết";
+    ViewBag.Title = "Thêm mới danh mục sản phẩm";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
@@ -14,24 +14,25 @@
             <a href="/admin/home" class="nav-link">Home</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="/admin/post" class="nav-link">Bài viết</a>
+            <a href="/admin/productcategory" class="nav-link">Danh mục sản phẩm</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="/admin/post/add" class="nav-link">Thêm mới</a>
+            <a href="/admin/productcategory/add" class="nav-link">Thêm mới</a>
         </li>
     </ul>
 }
+
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Quản lý bài viết</h1>
+                <h1>Quản lý danh mục sản phẩm</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Danh mục sản phẩm</a></li>
                     <li class="breadcrumb-item active">Thêm mới</li>
                 </ol>
             </div>
@@ -39,39 +40,29 @@
     </div><!-- /.container-fluid -->
 </section>
 
+
+
 <!-- Main content -->
 <section class="content">
 
     <!-- Default box -->
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title" style="font-size: 30px;">Thông tin thêm mới bài viết</h3>
+            <h3 class="card-title" style="font-size: 30px;">Thông tin thêm mới danh mục sản phẩm</h3>
+
+
         </div>
         <div class="card-body">
             <div class="bs-stepper-content">
-                @using (Html.BeginForm("Add", "Post", FormMethod.Post, new { }))
+                @using (Html.BeginForm("Add", "ProductCategory", FormMethod.Post, new { }))
                 {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true)
                     <div id="logins-part" class="content" role="tabpanel" aria-labelledby="logins-part-trigger">
-                        <div class="form-group ">
-                            <label for="exampleInputEmail1">Tiêu đề bài viết</label>
-                            @Html.TextBoxFor(x => x.Title, new { @class = "form-control", @placeholder = "Tiêu đề bài viết" })
-                            @Html.ValidationMessageFor(x => x.Title, null, new { @class = "text-danger" })
-                        </div>
-
                         <div class="form-group">
-                            <div class="form-group">
-                                <label for="exampleInputFile">Ảnh đại diện</label>
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        @Html.TextBoxFor(x => x.Image, new { @id = "txtImage", @class = "form-control", @placeholder = "Ảnh đại diện" })
-                                    </div>
-                                    <div class="input-group-append">
-                                        <span class="btn btn-primary" onclick="BrowseServer('txtImage')">Upload</span>
-                                    </div>
-                                </div>
-                            </div>
+                            <label for="exampleInputEmail1">Tên danh mục</label>
+                            @Html.TextBoxFor(x => x.Title, new { @class = "form-control", @placeholder = "Tên danh mục" })
+                            @Html.ValidationMessageFor(x => x.Title, null, new { @class = "text-danger" })
                         </div>
 
                         <div class="form-group">
@@ -81,15 +72,17 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="exampleInputPassword1">Chi tiết</label>
-                            @Html.TextAreaFor(x => x.Detail, new { @class = "form-control", @id = "txtDetail" })
-                            @Html.ValidationMessageFor(x => x.Detail, null, new { @class = "text-danger" })
-                        </div>
-
-                        <div class="form-group">
-                            <label for="exampleInputPassword1" style="margin:10px">Hiển thị</label>
-                            @Html.CheckBoxFor(x => x.isActive)
-                            @Html.ValidationMessageFor(x => x.isActive, null, new { @class = "text-danger" })
+                            <div class="form-group">
+                                <label for="exampleInputFile">Ảnh đại diện</label>
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        @Html.TextBoxFor(x => x.Icon, new { @id = "txtImage", @class = "form-control", @placeholder = "Ảnh đại diện" })
+                                    </div>
+                                    <div class="input-group-append">
+                                        <span class="btn btn-primary" onclick="BrowseServer('txtImage')">Upload</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -110,7 +103,7 @@
                             @Html.ValidationMessageFor(x => x.SeoKeywords, null, new { @class = "text-danger" })
                         </div>
                     </div>
-                    <a href="/admin/post" class="btn btn-danger">Quay lại</a>
+                    <a href="/admin/productcategory" class="btn btn-danger">Quay lại</a>
                     <button type="submit" class="btn btn-primary">Xác nhận</button>
                 }
             </div>
@@ -126,17 +119,13 @@
 <!-- /.content -->
 
 @section scripts {
-    <script>$(document).ready(function () {
-            CKEDITOR.replace('txtDetail', {
-                customConfig: '/content/ckeditor/config.js',
-                extraAllowedContent: 'span'
-            });
-        });
+    <script>
         function BrowseServer(field) {
             var finder = new CKFinder();
             finder.selectActionFunction = function (fileUrl) {
                 document.getElementById(field).value = fileUrl;
             };
             finder.popup();
-        }</script>
+        }
+    </script>
 }
