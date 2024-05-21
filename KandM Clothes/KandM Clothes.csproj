@@ -178,6 +178,7 @@
     <Compile Include="Areas\Admin\Controllers\NewController.cs" />
     <Compile Include="Areas\Admin\Controllers\PostController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProductCategoryController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProductController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -212,6 +213,26 @@
     <Compile Include="Migrations\202405171330445_UpdateImageInPost.Designer.cs">
       <DependentUpon>202405171330445_UpdateImageInPost.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202405190758559_UpdateProductCode.cs" />
+    <Compile Include="Migrations\202405190758559_UpdateProductCode.Designer.cs">
+      <DependentUpon>202405190758559_UpdateProductCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405190916597_CreateImageProduct.cs" />
+    <Compile Include="Migrations\202405190916597_CreateImageProduct.Designer.cs">
+      <DependentUpon>202405190916597_CreateImageProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405211027145_UpdateProductHashSetOrderDetail.cs" />
+    <Compile Include="Migrations\202405211027145_UpdateProductHashSetOrderDetail.Designer.cs">
+      <DependentUpon>202405211027145_UpdateProductHashSetOrderDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405211056335_UpdateCateIdInProduct.cs" />
+    <Compile Include="Migrations\202405211056335_UpdateCateIdInProduct.Designer.cs">
+      <DependentUpon>202405211056335_UpdateCateIdInProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405211623355_FixBugCantFindImg.cs" />
+    <Compile Include="Migrations\202405211623355_FixBugCantFindImg.Designer.cs">
+      <DependentUpon>202405211623355_FixBugCantFindImg.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\EF\Account.cs" />
@@ -226,6 +247,7 @@
     <Compile Include="Models\EF\Post.cs" />
     <Compile Include="Models\EF\Product.cs" />
     <Compile Include="Models\EF\ProductCategory.cs" />
+    <Compile Include="Models\EF\ProductImage.cs" />
     <Compile Include="Models\EF\Subscribe.cs" />
     <Compile Include="Models\EF\SystemSetting.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -3102,6 +3124,7 @@
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Admin\Views\Home\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_PartialSideBar.cshtml" />
+    <Content Include="Scripts\autoNumeric-1.9.45.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -3134,6 +3157,9 @@
     <Content Include="Areas\Admin\Views\ProductCategory\Index.cshtml" />
     <Content Include="Areas\Admin\Views\ProductCategory\Add.cshtml" />
     <Content Include="Areas\Admin\Views\ProductCategory\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Product\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Product\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\Product\Edit.cshtml" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />
@@ -3233,6 +3259,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202405171330445_UpdateImageInPost.resx">
       <DependentUpon>202405171330445_UpdateImageInPost.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405190758559_UpdateProductCode.resx">
+      <DependentUpon>202405190758559_UpdateProductCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405190916597_CreateImageProduct.resx">
+      <DependentUpon>202405190916597_CreateImageProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405211027145_UpdateProductHashSetOrderDetail.resx">
+      <DependentUpon>202405211027145_UpdateProductHashSetOrderDetail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405211056335_UpdateCateIdInProduct.resx">
+      <DependentUpon>202405211056335_UpdateCateIdInProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405211623355_FixBugCantFindImg.resx">
+      <DependentUpon>202405211623355_FixBugCantFindImg.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

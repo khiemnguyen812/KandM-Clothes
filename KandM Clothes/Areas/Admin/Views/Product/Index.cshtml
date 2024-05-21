@@ -1,0 +1,228 @@
+﻿@model PagedList.PagedList<KandM_Clothes.Models.EF.Product>
+@using PagedList.Mvc;
+@using PagedList;
+@{
+    ViewBag.Title = "Sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@section naviheader {
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/home" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/product" class="nav-link">Sản phẩm</a>
+        </li>
+    </ul>
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Quản lý sản phẩm</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Sản phẩm</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+
+
+<!-- Main content -->
+<section class="content">
+
+    @using (Html.BeginForm("Index", "Product", FormMethod.Get))
+    {
+        <div class="input-group w-100 mt-4 justify-content-end gx-0 gx-sm-3 gy-3 col-6" style="margin-bottom: 2%; border-radius: 10px;">
+            <span class="input-group-text" id="addon-wrapping" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;"><i class="bi bi-search"></i></span>
+            @Html.TextBox("searchTxt", null, new { @class = "form-control", @placeholder = "Tìm kiếm theo tiêu đề", @aria_label = "find", @aria_describedby = "addon-wrapping", style = "border-radius: 0;" })
+            <span class="input-group-append">
+                <button type="submit" class="btn btn-info btn-flat" style="border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
+                    <i class="fas fa-search"></i>
+                </button>
+            </span>
+        </div>
+    }
+
+
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title" style="font-size: 30px;">Danh sách sản phẩm</h3>
+
+            <div class="card-tools">
+                <a href="/admin/product/add" class="btn btn-primary">Thêm mới</a>
+                <a href="#" class="btn btn-danger" id="btnDeleteAll">Xóa toàn bộ</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAll" /> </th>
+                        <th class="text-center" style="width: 3%;">STT</th>
+                        <th class="text-center" style="width: 15%;">Tên sản phẩm</th>
+                        <th class="text-center" style="width: 20%;">Hình ảnh</th>
+                        <th class="text-center" style="width: 12%;">Danh mục</th>
+                        <th class="text-center" style="width: 10%">Hiển thị</th>
+                        <th class="text-center" style="width: 10%;">Ngày tạo</th>
+                        <th class="text-center" style="width: 10%;">Số lượng</th>
+                        <th class="text-center" style="width: 10%;">Giá</th>
+                        <th class="text-center" style="width: 10%;">Chức năng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        var listModel = Model.ToList();
+                        foreach (var item in Model)
+                        {
+                            <tr id="row_@item.Id">
+                                <td><input type="checkbox" class="selectedItem" data-id="@item.Id" /></td>
+                                <td class="text-center">@((ViewBag.Page - 1) * ViewBag.PageSize + listModel.IndexOf(item) + 1)</td>
+                                <td class="text-center">@item.Title</td>
+                                <td class="text-center">
+                                    <img src="@item.Image" style="max-width: 100%;" />
+                                </td>
+                                <td class="text-center">@item.ProductCategory.Title</td>
+                                <td class="text-center">
+                                    <a href="#" data-id="@item.Id" class="btnActive">
+                                        <i class='@(item.isActive ? "fa fa-check text-success" : "fas fa-times text-danger")'></i>
+                                    </a>
+                                </td>
+                                <td class="text-center">@(item.CreatedDate is DateTime date ? date.ToString("dd/MM/yyyy") : "")</td>
+                                <td class="text-center">@item.Quantity</td>
+                                <td class="text-center">@item.Price VNĐ</td>
+                                <td class="text-center">
+                                    <a href="/admin/product/edit/@item.Id" class="fas fa-pen" style="color: #f29d38;"></a>
+                                    <a href="#" class="fas fa-trash btnDelete" style="color: #EB3223;" data-id="@item.Id"></a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="10">Không có dữ liệu</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+            <div class="pager-container" style="text-align: right">
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+            </div>
+
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+        </div>
+        <!-- /.card-footer-->
+    </div>
+    <!-- /.card -->
+
+</section>
+<!-- /.content -->
+
+@section scripts{
+    <script>
+        function updateSTT() {
+            $("table tbody tr").each(function (index) {
+                $(this).find("td:nth-child(2)").text(index + 1);
+            });
+        }
+
+        $(document).ready(function () {
+            $('body').on("change", '#selectAll', function () {
+                var checkStatus = $(this).prop('checked');
+                var checkList = $(".selectedItem");
+                checkList.prop('checked', checkStatus);
+            })
+            $('body').on('click', '#btnDeleteAll', function () {
+                var checkList = $(".selectedItem:checked");
+                if (checkList.length == 0) {
+                    alert("Vui lòng chọn ít nhất 1 bản ghi để xóa");
+                    return;
+                }
+                if (confirm("Bạn có chắc chắn muốn xóa không?")) {
+                    var ids = [];
+                    checkList.each(function () {
+                        ids.push($(this).data("id"));
+                    });
+                    ids.forEach(function (id) {
+                        console.log(id);
+                    })
+                    $.ajax({
+                        url: "/admin/product/DeleteAll",
+                        type: "POST",
+                        data: { ids: ids },
+                        success: function (res) {
+                            if (res.success) {
+                                ids.forEach(function (id) {
+                                    $("#row_" + id).remove();
+                                })
+                                if ($("tbody tr").length == 0) {
+                                    $("tbody").append('<tr><td colspan="4">Không có dữ liệu</td></tr>');
+                                } else {
+                                    updateSTT(); // Update STT after removing a row
+                                }
+                            }
+                        }
+                    })
+                }
+            })
+            $("body").on("click", ".btnDelete", function () {
+                var id = $(this).data("id");
+                console.log(id);
+                if (confirm("Bạn có chắc chắn muốn xóa không?")) {
+                    $.ajax({
+                        url: "/admin/product/delete",
+                        type: "POST",
+                        data: { id: id },
+                        success: function (res) {
+                            if (res.success) {
+                                $("#row_" + id).remove();
+                                if ($("tbody tr").length == 0) {
+                                    $("tbody").append('<tr><td colspan="4">Không có dữ liệu</td></tr>');
+                                } else {
+                                    updateSTT(); // Update STT after removing a row
+                                }
+                            }
+
+                        }
+                    })
+                }
+            })
+            $("body").on("click", ".btnActive", function (e) {
+                e.preventDefault();
+                var id = $(this).data("id");
+                console.log(id);
+                $.ajax({
+                    url: "/admin/product/isactive",
+                    type: "POST",
+                    data: { id: id },
+                    success: function (res) {
+                        if (res.success) {
+                            var iconClass = res.active ? "fa fa-check text-success" : "fas fa-times text-danger";
+                            $("#row_" + id + " .btnActive i").attr('class', iconClass);
+                        }
+                    }
+                })
+            })
+
+        })
+    </script>
+}
