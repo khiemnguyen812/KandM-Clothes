@@ -9,7 +9,9 @@
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true; // Only set this to true if you are okay with data loss
+
         }
 
         protected override void Seed(KandM_Clothes.Models.ApplicationDbContext context)
