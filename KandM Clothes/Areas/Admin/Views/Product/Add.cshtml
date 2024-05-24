@@ -131,7 +131,7 @@
                                                     <div class="form-group">
                                                         <div class="custom-control custom-checkbox">
                                                             @Html.CheckBoxFor(x => x.IsHot, new { @class = "custom-control-input", @id = "IsHotCheckBox" })
-                                                            <label class="custom-control-label" for="IsHotCheckBox">Nổi bật</label>
+                                                            <label class="custom-control-label" for="IsHotCheckBox">Hot</label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -163,7 +163,10 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="pager-container" style="text-align: right">
 
+                                                <button type="button" class="btn btn-primary" id="continueToTimeline">Tiếp tục</button>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -188,6 +191,9 @@
                                             </table>
                                             <input type="hidden" id="CurrentId" value="0" />
                                         </div>
+                                        <div class="pager-container" style="text-align: right">
+                                            <button type="button" class="btn btn-primary" id="continueToSettings">Tiếp tục</button>
+                                        </div>
                                     </div>
                                     <!-- /.tab-pane -->
                                     <div class="tab-pane" id="settings">
@@ -208,16 +214,17 @@
                                             @Html.TextAreaFor(x => x.SeoKeywords, new { @class = "form-control", @placeholder = "SeoKeywords" })
                                             @Html.ValidationMessageFor(x => x.SeoKeywords, null, new { @class = "text-danger" })
                                         </div>
+                                        <div class="pager-container" style="text-align: right">
+                                            <a href="/admin/product" class="btn btn-danger">Hủy</a>
+                                            <button type="submit" class="btn btn-success">Thêm mới</button>
+                                        </div>
                                     </div>
                                     <!-- /.tab-pane -->
                                 </div>
                             </div><!-- /.card-body -->
                         </div>
                     </div>
-                    <div class="pager-container" style="text-align: right;margin:2%">
-                        <a href="/admin/product" class="btn btn-danger">Quay lại</a>
-                        <button type="submit" class="btn btn-success">Thêm mới</button>
-                    </div>
+
                 }
             </div>
         </div>
@@ -246,17 +253,17 @@
             var str = "";
             str += `
 <tr id="trow_${currentId}">
-            <td class="text-center">${currentId}</td>
-            <td class="text-center">
-                <img src="${url}" />
-                <input type="hidden" value="${url}" name="Images"/>
-            </td>
-            <td class="text-center">
-                <input type="radio" name="rDefault" value="${currentId}" ${currentId == 1 ? 'checked="checked"' : ''}/>
-            </td>
-            <td class="text-center">
-                <a href="#" data-id="${currentId}" class="btn btn-danger btnDeleteImage">Xóa</a>
-            </td>
+                    <td class="text-center">${currentId}</td>
+                    <td class="text-center">
+                        <img src="${url}" />
+                        <input type="hidden" value="${url}" name="Images"/>
+                    </td>
+                    <td class="text-center">
+                        <input type="radio" name="rDefault" value="${currentId}" ${currentId == 1 ? 'checked="checked"' : ''}/>
+                    </td>
+                    <td class="text-center">
+                        <a href="#" data-id="${currentId}" class="btn btn-danger btnDeleteImage">Xóa</a>
+                    </td>
 </tr>`;
 
 
@@ -302,6 +309,14 @@
                 });
             });
 
+            $('#continueToTimeline').click(function () {
+                $('.nav-pills a[href="#timeline"]').tab('show');
+            });
+
+            $('#continueToSettings').click(function () {
+                $('.nav-pills a[href="#settings"]').tab('show');
+            });
         });
+
     </script>
 }
