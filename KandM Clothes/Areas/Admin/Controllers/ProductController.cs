@@ -57,7 +57,7 @@ namespace KandM_Clothes.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (Images.Count > 0 && Images != null)
+                if (Images != null)
                 {
                     int index = 1;
                     foreach (var image in Images)
@@ -135,6 +135,39 @@ namespace KandM_Clothes.Areas.Admin.Controllers
             _dbContext.Products.Remove(product);
             _dbContext.SaveChanges();
             return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public ActionResult DeleteAll(List<int> ids)
+        {
+            if(ids==null)
+            {
+                return Json(new { success = false });
+            }
+            foreach(var id in ids)
+            {
+                var model = _dbContext.Products.Find(id);
+                if (model == null)
+                {
+                    return Json(new { success = false });
+                }
+                _dbContext.Products.Remove(model);
+            }
+            _dbContext.SaveChanges();
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public ActionResult IsActive(int id)
+        {
+            var product = _dbContext.Products.Find(id);
+            if (product == null)
+            {
+                return Json(new { success = false });
+            }
+            product.isActive = !product.isActive;
+            _dbContext.SaveChanges();
+            return Json(new { success = true, active = product.isActive });
         }
     }
 

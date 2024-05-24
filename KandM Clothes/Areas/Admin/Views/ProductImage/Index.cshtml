@@ -1,0 +1,147 @@
+﻿@model IEnumerable<KandM_Clothes.Models.EF.ProductImage>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_EmptyLayout .cshtml";
+}
+
+<style>
+    .glImage {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap; 
+        margin: 5px;
+        padding: 0;
+        justify-content: space-between; 
+    }
+
+        .glImage li {
+            display: inline-block;
+            position: relative;
+            flex: 0 0 calc(33.33% - 10px); 
+            margin: 5px;
+        }
+
+
+    .box-btn {
+        position: absolute;
+        margin-top: 5px;
+        bottom: 0;
+        text-align: center;
+        width: 100%;
+    }
+</style>
+
+<section class="content">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Ảnh sản phẩm</h3>
+            <div class="card-tools">
+                <a href="#" class="btn btn-success" id="UploadImage" onclick="BrowseServer()">Tải ảnh</a>
+                <button type="button" class="btn btn-danger" data-card-widget="remove" title="Remove" id="btnDeleteAll">
+                    Xóa toàn bộ
+                </button>
+            </div>
+
+        </div>
+
+        <div class="card-body">
+            <ul class="glImage">
+                @if (Model != null)
+                {
+                    foreach (var item in Model)
+                    {
+                        <li id="row_@item.Id">
+                            <img src="@item.Image" alt="" style="width: 100%; height: 100%;" />
+                            <div class="box-btn">
+                                <a href="#" class="btn btn-sm btn-danger btnDelete" data-id="@item.Id"><i class="fa fa-trash"></i></a>
+                                @if (item.IsDefault == false)
+                                {
+                                    <a href="#" class="btn btn-sm btn-primary btnDefault" data-id="@item.Id"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                }
+                                else
+                                {
+                                    <a href="#" class="btn btn-sm btn-primary btnDefault" data-id="@item.Id"><i class="fa fa-star"></i></a>
+                                }
+                            </div>
+                        </li>
+                    }
+                }
+                else
+                {
+                    <li>Không có hình ảnh nào</li>
+                }
+            </ul>
+        </div>
+    </div>
+</section>
+
+@section scripts {
+    <script>
+
+        function BrowseServer(field) {
+            var finder = new CKFinder();
+            finder.selectActionFunction = function (fileUrl) {
+                console.log(fileUrl);
+                AddImage(@ViewBag.ProductId, fileUrl);
+            };
+            finder.popup();
+        }
+
+        function AddImage(id, url) {
+            $.ajax({
+                url: '/admin/productimage/addimage',
+                data: { productId : id, url: url },
+                type: 'POST',
+                success: function (res) {
+                    if (res.success) {
+                        location.reload();
+                    }
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('.btnDelete').click(function (e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                $.ajax({
+                    url: '/admin/productimage/delete',
+                    data: { id: id },
+                    type: 'POST',
+                    success: function (res) {
+                        if (res.success) {
+                            $("#row_" + id).remove();
+                        }
+                    }
+                });
+            });
+            $('.btnDefault').click(function (e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                $.ajax({
+                    url: '/admin/productimage/setdefault',
+                    data: { id: id, productId: @ViewBag.ProductId},
+                    type: 'POST',
+                    success: function (res) {
+                        if (res.success) {
+                            location.reload();
+                        }
+                    }
+                });
+            });
+            $('#btnDeleteAll').click(function (e) {
+                console.log('delete all');
+                $.ajax({
+                    url: '/admin/productimage/deleteall',
+                    data: { productId: @ViewBag.ProductId },
+                    type: 'POST',
+                    success: function (res) {
+                        if (res.success) {
+                            location.reload();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}
