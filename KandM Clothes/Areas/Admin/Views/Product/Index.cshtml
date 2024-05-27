@@ -46,17 +46,26 @@
 <!-- Main content -->
 <section class="content">
 
+
+
     @using (Html.BeginForm("Index", "Product", FormMethod.Get))
     {
-        <div class="input-group w-100 mt-4 justify-content-end gx-0 gx-sm-3 gy-3 col-6" style="margin-bottom: 2%; border-radius: 10px;">
-            <span class="input-group-text" id="addon-wrapping" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;"><i class="bi bi-search"></i></span>
-            @Html.TextBox("searchTxt", null, new { @class = "form-control", @placeholder = "Tìm kiếm theo tiêu đề", @aria_label = "find", @aria_describedby = "addon-wrapping", style = "border-radius: 0;" })
-            <span class="input-group-append">
-                <button type="submit" class="btn btn-info btn-flat" style="border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
-                    <i class="fas fa-search"></i>
-                </button>
-            </span>
+        <div class="d-flex justify-content-between">
+            <div class="input-group" style="margin-bottom: 2%; border-radius: 10px; width: 50%">
+                <span class="input-group-text" id="addon-wrapping" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;"><i class="bi bi-search"></i></span>
+                @Html.TextBox("searchTxt", null, new { @class = "form-control", @placeholder = "Tìm kiếm theo tiêu đề", @aria_label = "find", @aria_describedby = "addon-wrapping", style = "border-radius: 0;" })
+                <span class="input-group-append">
+                    <button type="submit" class="btn btn-info btn-flat" style="border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </span>
+            </div>
+
+            <div class="form-group" style="text-align: right; width: 30%">
+                @Html.DropDownList("categoryFilter", ViewBag.ProcuctCategories as SelectList, "-Lọc theo danh mục sản phẩm-", new { @class = "form-control", @placeholder = "Mã sản phẩm", @selected = ViewBag.CategoryFilter, @id = "categoryFilter" })
+            </div>
         </div>
+
     }
 
 
@@ -75,15 +84,18 @@
                 <thead>
                     <tr>
                         <th><input type="checkbox" id="selectAll" /> </th>
-                        <th class="text-center" style="width: 3%;">STT</th>
-                        <th class="text-center" style="width: 15%;">Tên sản phẩm</th>
+                        <th class="text-center" style="width: 2%;">STT</th>
+                        <th class="text-center" style="width: 10%;">Tên sản phẩm</th>
                         <th class="text-center" style="width: 20%;">Hình ảnh</th>
                         <th class="text-center" style="width: 12%;">Danh mục</th>
-                        <th class="text-center" style="width: 10%">Hiển thị</th>
-                        <th class="text-center" style="width: 10%;">Ngày tạo</th>
-                        <th class="text-center" style="width: 10%;">Số lượng</th>
-                        <th class="text-center" style="width: 10%;">Giá</th>
-                        <th class="text-center" style="width: 10%;">Chức năng</th>
+                        <th class="text-center" style="width: 7%">Hiển thị</th>
+                        <th class="text-center" style="width: 7%">Trang chủ</th>
+                        <th class="text-center" style="width: 7%">Bán chạy</th>
+                        <th class="text-center" style="width: 7%">Mới</th>
+                        <th class="text-center" style="width: 8%;">Ngày tạo</th>
+                        <th class="text-center" style="width: 8%;">Số lượng</th>
+                        <th class="text-center" style="width: 7%;">Giá</th>
+                        <th class="text-center" style="width: 5%;">Chức năng</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -97,12 +109,27 @@
                                 <td class="text-center">@((ViewBag.Page - 1) * ViewBag.PageSize + listModel.IndexOf(item) + 1)</td>
                                 <td class="text-center">@item.Title</td>
                                 <td class="text-center imgProduct" data-id="@item.Id">
-                                    <img src="@item.Image" style="max-width: 100%;"/>
+                                    <img src="@item.Image" style="max-width: 100%;" />
                                 </td>
                                 <td class="text-center">@item.ProductCategory.Title</td>
                                 <td class="text-center">
                                     <a href="#" data-id="@item.Id" class="btnActive">
                                         <i class='@(item.isActive ? "fa fa-check text-success" : "fas fa-times text-danger")'></i>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="#" data-id="@item.Id" class="btnHome">
+                                        <i class='@(item.IsHome ? "fa fa-check text-success" : "fas fa-times text-danger")'></i>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="#" data-id="@item.Id" class="btnHot">
+                                        <i class='@(item.IsHot ? "fa fa-check text-success" : "fas fa-times text-danger")'></i>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="#" data-id="@item.Id" class="btnNew">
+                                        <i class='@(item.IsNew ? "fa fa-check text-success" : "fas fa-times text-danger")'></i>
                                     </a>
                                 </td>
                                 <td class="text-center">@(item.CreatedDate is DateTime date ? date.ToString("dd/MM/yyyy") : "")</td>
@@ -243,7 +270,6 @@
             $("body").on("click", ".btnActive", function (e) {
                 e.preventDefault();
                 var id = $(this).data("id");
-                console.log(id);
                 $.ajax({
                     url: "/admin/product/isactive",
                     type: "POST",
@@ -256,6 +282,63 @@
                     }
                 })
             })
+
+            $("body").on("click", ".btnHome", function (e) {
+                e.preventDefault();
+                var id = $(this).data("id");
+                $.ajax({
+                    url: "/admin/product/ishome",
+                    type: "POST",
+                    data: { id: id },
+                    success: function (res) {
+                        if (res.success) {
+                            var iconClass = res.isHome ? "fa fa-check text-success" : "fas fa-times text-danger";
+                            $("#row_" + id + " .btnHome i").attr('class', iconClass);
+                        }
+                    }
+                })
+            })
+
+            $("body").on("click", ".btnHot", function (e) {
+                e.preventDefault();
+                var id = $(this).data("id");
+                $.ajax({
+                    url: "/admin/product/ishot",
+                    type: "POST",
+                    data: { id: id },
+                    success: function (res) {
+                        if (res.success) {
+                            var iconClass = res.isHot ? "fa fa-check text-success" : "fas fa-times text-danger";
+                            $("#row_" + id + " .btnHot i").attr('class', iconClass);
+                        }
+                    }
+                })
+            })
+
+            $("body").on("click", ".btnNew", function (e) {
+                e.preventDefault();
+                var id = $(this).data("id");
+                $.ajax({
+                    url: "/admin/product/isnew",
+                    type: "POST",
+                    data: { id: id },
+                    success: function (res) {
+                        if (res.success) {
+                            var iconClass = res.isNew ? "fa fa-check text-success" : "fas fa-times text-danger";
+                            $("#row_" + id + " .btnNew i").attr('class', iconClass);
+                        }
+                    }
+                })
+            })
+            $(document).ready(function () {
+                $('#categoryFilter').on('change', function () {
+                    var selectedValue = $(this).val();
+                    var currentUrl = new URL(window.location.href);
+                    currentUrl.searchParams.delete('categoryFilter');
+                    currentUrl.searchParams.append('categoryFilter', selectedValue);
+                    window.location.href = currentUrl.href;
+                });
+            });
 
         })
     </script>

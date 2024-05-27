@@ -1,0 +1,12 @@
+﻿@model IEnumerable<KandM_Clothes.Models.EF.Category>
+
+@if (Model != null && Model.Any())
+{
+    <ul class="navbar_menu">
+        @foreach (var category in Model)
+        {
+            <li><a href="/@category.Alias"><strong>@category.Title</strong></a></li>
+        }
+    </ul>
+
+}

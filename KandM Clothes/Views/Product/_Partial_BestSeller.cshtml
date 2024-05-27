@@ -1,0 +1,66 @@
+﻿@model IEnumerable<KandM_Clothes.Models.EF.Product>
+
+@if (Model != null && Model.Any())
+{
+    <div class="best_sellers">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <div class="section_title new_arrivals_title">
+                        <h2>Best Sellers</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="product_slider_container">
+                        <div class="owl-carousel owl-theme product_slider">
+
+                            @foreach (var item in Model)
+                            {
+                                <div class="owl-item product_slider_item">
+                                    <div class="product-item">
+                                        <div class="product discount">
+                                            <div class="product_image" style="max-height:100%">
+                                                <img src="@item.Image" alt="" style="height: 230px; object-fit: cover;">
+                                            </div>
+
+                                            <div class="favorite favorite_left"></div>
+                                            <div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-$@(item.Price-item.PriceSale)</span></div>
+                                            @if (item.IsNew)
+                                            {
+                                                <div class="product_bubble product_bubble_left product_bubble_green d-flex flex-column align-items-center"><span>new</span></div>
+                                            }
+                                            <div class="product_info">
+                                                <h6 class="product_name"><a href="single.html">@item.Title</a></h6>
+                                                <div class="product_price">
+                                                    @if (item.IsSale)
+                                                    {
+                                                        @:$@item.PriceSale.ToString()<span>$@item.Price.ToString()</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        @:$@item.Price.ToString()
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="product_slider_nav_left product_slider_nav d-flex align-items-center justify-content-center flex-column" style="z-index: 1;">
+                            <i class="fa fa-chevron-left" aria-hidden="false"></i>
+                        </div>
+                        <div class="product_slider_nav_right product_slider_nav d-flex align-items-center justify-content-center flex-column" style="z-index: 1;">
+                            <i class="fa fa-chevron-right" aria-hidden="false"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+}

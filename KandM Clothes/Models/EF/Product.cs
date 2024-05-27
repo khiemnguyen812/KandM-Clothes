@@ -35,6 +35,7 @@ namespace KandM_Clothes.Models.EF
         public bool IsNew { get; set; }
         public bool IsSale { get; set; }
         public bool IsHot { get; set; }
+        public bool IsHome { get; set; }
         public string SeoTitle { get; set; }
         public string SeoDescription { get; set; }
         public string SeoKeywords { get; set; }

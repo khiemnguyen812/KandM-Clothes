@@ -22,6 +22,9 @@ namespace KandM_Clothes.Models.EF
         public string Title { get; set; }
         [Required(ErrorMessage = "Miêu tả không được để trống")]
         public string Description { get; set; }
+        [Required(ErrorMessage = "Vị trí danh mục không được để trống")]
+        public int Position { get; set; }
+        public string Alias { get; set; }
         public ICollection<New> News { get; set; }
         public ICollection<Post> Posts { get; set; }
 

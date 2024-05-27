@@ -1,0 +1,45 @@
+﻿@model IEnumerable<KandM_Clothes.Models.EF.Product>
+
+@if (Model != null)
+{
+    foreach (var item in Model)
+    {
+        <div class="product-item @item.ProductCategory.Title.ToLower()">
+            <div class="product discount product_filter">
+                <div class="product_image" style="max-height:100%">
+                    <img src="@item.Image" alt="" style="height: 230px; object-fit: cover;">
+                </div>
+
+                @if (item.IsFeature)
+                {
+                    <div class="favorite favorite_left"></div>
+
+                }
+                @if (item.IsNew)
+                {
+                    <div class="product_bubble product_bubble_left product_bubble_green d-flex flex-column align-items-center"><span>new</span></div>
+                }
+                @if (item.IsSale)
+                {
+                    <div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-$@(item.Price-item.PriceSale)</span></div>
+                }
+
+                <div class="product_info">
+                    <h6 class="product_name"><a href="single.html">@item.Title</a></h6>
+                    <div class="product_price">
+                        @if (item.IsSale)
+                        {
+                            @:$@item.PriceSale.ToString()<span>$@item.Price.ToString()</span>
+                        }
+                        else
+                        {
+                            @:$@item.Price.ToString()
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="red_button add_to_cart_button"><a href="#">add to cart</a></div>
+        </div>
+    }
+}
+

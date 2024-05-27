@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using KandM_Clothes.Models.Common;
+using System.Web.UI.WebControls;
+
 
 namespace KandM_Clothes.Areas.Admin.Controllers
 {
@@ -16,7 +19,7 @@ namespace KandM_Clothes.Areas.Admin.Controllers
 
         public ActionResult Index()
         {
-            var categories = _dbContext.Categories.ToList();
+            var categories = _dbContext.Categories.OrderBy(c => c.Position).ToList();
             return View(categories);
         }
 
@@ -35,6 +38,7 @@ namespace KandM_Clothes.Areas.Admin.Controllers
             }
             category.CreatedDate = DateTime.Now;
             category.ModifiedDate = DateTime.Now;
+            category.Alias = KandM_Clothes.Models.Common.Filter.FilterChar(category.Title);
             _dbContext.Categories.Add(category);
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
@@ -55,9 +59,11 @@ namespace KandM_Clothes.Areas.Admin.Controllers
                 return View();
             }
             _dbContext.Categories.Attach(category);
+            category.Alias = KandM_Clothes.Models.Common.Filter.FilterChar(category.Title);
             category.ModifiedDate = DateTime.Now;
             _dbContext.Entry(category).Property(x => x.Title).IsModified = true;
             _dbContext.Entry(category).Property(x => x.Description).IsModified = true;
+            _dbContext.Entry(category).Property(x => x.Position).IsModified = true;
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
         }

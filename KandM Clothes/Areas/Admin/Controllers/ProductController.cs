@@ -18,7 +18,7 @@ namespace KandM_Clothes.Areas.Admin.Controllers
     {
         // GET: Admin/Product
         ApplicationDbContext _dbContext = new ApplicationDbContext();
-        public ActionResult Index(int? page, string searchTxt)
+        public ActionResult Index(int? page, string searchTxt, int? categoryFilter)
         {
             if (page == null || page < 1)
             {
@@ -37,10 +37,15 @@ namespace KandM_Clothes.Areas.Admin.Controllers
             {
                 searchTxt = "";
             }
+            if (categoryFilter != null)
+            {
+                products = products.Where(n => n.ProductCategoryId == categoryFilter);
+            }
             var pageProducts = products.OrderByDescending(x => x.Id).ToPagedList(pageIndex, pageSize);
             ViewBag.PageSize = pageSize;
             ViewBag.Page = page;
             ViewBag.SearchTxt = searchTxt;
+            ViewBag.CategoryFilter = categoryFilter;
             ViewBag.ProcuctCategories = new SelectList(_dbContext.ProductCategories.ToList(), "Id", "Title");
             return View(pageProducts);
         }
@@ -80,6 +85,7 @@ namespace KandM_Clothes.Areas.Admin.Controllers
                 product.ProductCategory = _dbContext.ProductCategories.Find(product.ProductCategoryId);
                 product.CreatedDate = DateTime.Now;
                 product.ModifiedDate = DateTime.Now;
+                product.IsNew = true;
                 _dbContext.Products.Add(product);
                 _dbContext.SaveChanges();
                 return RedirectToAction("Index");
@@ -113,11 +119,6 @@ namespace KandM_Clothes.Areas.Admin.Controllers
                 _dbContext.SaveChanges();
                 return RedirectToAction("Index");
             }
-
-            var errors = ModelState
-        .Where(x => x.Value.Errors.Count > 0)
-        .Select(x => new { x.Key, x.Value.Errors })
-        .ToArray();
 
             ViewBag.ProcuctCategories = new SelectList(_dbContext.ProductCategories.ToList(), "Id", "Title");
             return View(product);
@@ -168,6 +169,43 @@ namespace KandM_Clothes.Areas.Admin.Controllers
             product.isActive = !product.isActive;
             _dbContext.SaveChanges();
             return Json(new { success = true, active = product.isActive });
+        }
+
+        [HttpPost]
+        public ActionResult IsHome(int id)
+        {
+            var product = _dbContext.Products.Find(id);
+            if (product == null)
+            {
+                return Json(new { success = false });
+            }
+            product.IsHome = !product.IsHome;
+            _dbContext.SaveChanges();
+            return Json(new { success = true, isHome = product.IsHome });
+        }
+        [HttpPost]
+        public ActionResult IsHot(int id)
+        {
+            var product = _dbContext.Products.Find(id);
+            if (product == null)
+            {
+                return Json(new { success = false });
+            }
+            product.IsHot = !product.IsHot;
+            _dbContext.SaveChanges();
+            return Json(new { success = true, isHot = product.IsHot });
+        }
+        [HttpPost]
+        public ActionResult IsNew(int id)
+        {
+            var product = _dbContext.Products.Find(id);
+            if (product == null)
+            {
+                return Json(new { success = false });
+            }
+            product.IsNew = !product.IsNew;
+            _dbContext.SaveChanges();
+            return Json(new { success = true, isNew = product.IsNew });
         }
     }
 

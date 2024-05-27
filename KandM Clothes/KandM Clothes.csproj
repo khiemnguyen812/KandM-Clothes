@@ -181,8 +181,11 @@
     <Compile Include="Areas\Admin\Controllers\ProductController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProductImageController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MenuController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -236,6 +239,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Common\Filter.cs" />
     <Compile Include="Models\EF\Account.cs" />
     <Compile Include="Models\EF\Advertisement.cs" />
     <Compile Include="Models\EF\Category.cs" />
@@ -1240,6 +1244,7 @@
     <Content Include="Content\clients\dist\css\avatar.png" />
     <Content Include="Content\clients\dist\css\bg.svg" />
     <Content Include="Content\clients\dist\css\styles.css" />
+    <Content Include="Content\clients\dist\img\admin.png" />
     <Content Include="Content\clients\dist\img\AdminLTELogo.png" />
     <Content Include="Content\clients\dist\img\avatar.png" />
     <Content Include="Content\clients\dist\img\avatar2.png" />
@@ -3303,6 +3308,13 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Menu\_MenuTop.cshtml" />
+    <Content Include="Views\Menu\_MenuProductCategory.cshtml" />
+    <Content Include="Views\Menu\_MenuArrivals.cshtml" />
+    <Content Include="Views\Product\_Partial_ProductByCategory.cshtml" />
+    <Content Include="Views\Product\_Partial_BestSeller.cshtml" />
+    <Content Include="Views\Product\Index.cshtml" />
+    <Content Include="Views\Contact\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

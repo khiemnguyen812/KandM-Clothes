@@ -33,6 +33,7 @@ namespace KandM_Clothes.Areas.Admin.Controllers
             }
             model.CreatedDate = DateTime.Now;
             model.ModifiedDate = DateTime.Now;
+            model.Alias = KandM_Clothes.Models.Common.Filter.FilterChar(model.Title);
             _dbContext.ProductCategories.Add(model);
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
@@ -53,6 +54,7 @@ namespace KandM_Clothes.Areas.Admin.Controllers
             }
             _dbContext.ProductCategories.Attach(model);
             model.ModifiedDate = DateTime.Now;
+            model.Alias = KandM_Clothes.Models.Common.Filter.FilterChar(model.Title);
             _dbContext.Entry(model).State = System.Data.Entity.EntityState.Modified;
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
