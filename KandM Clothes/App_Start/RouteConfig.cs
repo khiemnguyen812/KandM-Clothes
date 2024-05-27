@@ -13,10 +13,25 @@ namespace KandM_Clothes
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+
             routes.MapRoute(
-                name: "Admin",
-                url: "admin/{controller}/{action}/{id}",
+                name: "Home",
+                url: "trang-chu",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+                namespaces: new[] { "KandM_Clothes.Controllers" }
+            );
+
+            routes.MapRoute(
+                name: "Product",
+                url: "san-pham",
+                defaults: new { controller = "Product", action = "Index", id = UrlParameter.Optional },
+                namespaces: new[] { "KandM_Clothes.Controllers" }
+            );
+
+            routes.MapRoute(
+                name: "Contact",
+                url: "lien-he",
+                defaults: new { controller = "Contact", action = "Index", id = UrlParameter.Optional },
                 namespaces: new[] { "KandM_Clothes.Controllers" }
             );
 
