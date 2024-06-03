@@ -26,6 +26,7 @@ namespace KandM_Clothes.Models.EF
         public string Address { get; set; }
         [Required]
         public decimal TotalAmount { get; set; }
+        public decimal TotalPrice { get; set; }
         [Required]
         public int Quantity { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }

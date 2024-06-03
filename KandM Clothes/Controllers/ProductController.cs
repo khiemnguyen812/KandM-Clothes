@@ -12,7 +12,7 @@ namespace KandM_Clothes.Controllers
     {
         // GET: Product
         ApplicationDbContext _dbContext = new ApplicationDbContext();
-        public ActionResult Index(int? page, string searchTxt, int? categoryFilter)
+        public ActionResult Index(int? page, string searchTxt, int? categoryFilter, int? minPrice, int? maxPrice)
         {
             if (page == null || page < 1)
             {
@@ -36,12 +36,30 @@ namespace KandM_Clothes.Controllers
                 ViewBag.CategoryFilter = _dbContext.ProductCategories.Find(categoryFilter).Title;
                 products = products.Where(n => n.ProductCategoryId == categoryFilter);
             }
+
+            if (minPrice != null)
+            {
+                products = products.Where(n => n.Price >= minPrice);
+                ViewBag.MinPrice = minPrice;
+            }
+            if (maxPrice != null)
+            {
+                products = products.Where(n => n.Price <= maxPrice);
+                ViewBag.MaxPrice = maxPrice;
+            }
+
             var pageProducts = products.OrderByDescending(x => x.Id).ToPagedList(pageIndex, pageSize);
             ViewBag.PageSize = pageSize;
             ViewBag.Page = page;
             ViewBag.SearchTxt = searchTxt;
             ViewBag.ProcuctCategories = _dbContext.ProductCategories.ToList();
             return View(pageProducts);
+        }
+
+        public ActionResult Detail(string alias, int id)
+        {
+            var product = _dbContext.Products.Find(id);
+            return View(product);
         }
 
         public ActionResult Partial_ProductByCategory()

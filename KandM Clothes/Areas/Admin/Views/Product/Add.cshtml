@@ -95,7 +95,7 @@
 
                                             <div class="form-group">
                                                 <label for="exampleInputPassword1">Chi tiết</label>
-                                                @Html.TextAreaFor(x => x.Detail, new { @class = "form-control", @placeholder = "Chi tiết" })
+                                                @Html.TextAreaFor(x => x.Detail, new { @class = "form-control", @placeholder = "Chi tiết", @id = "txtDetail" })
                                                 @Html.ValidationMessageFor(x => x.Detail, null, new { @class = "text-danger" })
                                             </div>
 
@@ -238,7 +238,12 @@
 
 @section scripts {
     <script>
-
+        $(document).ready(function () {
+            CKEDITOR.replace('txtDetail', {
+                customConfig: '/content/ckeditor/config.js',
+                extraAllowedContent: 'span'
+            });
+        });
         function BrowseServer(field) {
             var finder = new CKFinder();
             finder.selectActionFunction = function (fileUrl) {

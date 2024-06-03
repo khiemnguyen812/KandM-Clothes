@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace KandM_Clothes.Models.EF
 {
@@ -29,6 +30,7 @@ namespace KandM_Clothes.Models.EF
         public string ProductCode { get; set; }
         public decimal PriceSale { get; set; }
         public int Quantity { get; set; }
+        [AllowHtml]
         public string Detail { get; set; }
         public string Image { get; set; }
         public bool IsFeature { get; set; }
@@ -39,6 +41,7 @@ namespace KandM_Clothes.Models.EF
         public string SeoTitle { get; set; }
         public string SeoDescription { get; set; }
         public string SeoKeywords { get; set; }
+        public string Alias { get; set; }
         public virtual ProductCategory ProductCategory { get; set; }
         public virtual ICollection<ProductImage> ProductImages { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

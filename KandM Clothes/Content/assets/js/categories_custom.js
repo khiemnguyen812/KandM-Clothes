@@ -389,11 +389,11 @@ jQuery(document).ready(function($)
 
     function initPriceSlider()
     {
-		$( "#slider-range" ).slider(
-		{
-			range: true,
-			min: 0,
-			max: 1000,
+		$("#slider-range").slider(
+			{
+				range: true,
+				min: 0,
+				max: 1000,
 			values: [ 0, 580 ],
 			slide: function( event, ui )
 			{

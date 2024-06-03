@@ -7,7 +7,9 @@
         <div class="product-item @item.ProductCategory.Title.ToLower()">
             <div class="product discount product_filter">
                 <div class="product_image" style="max-height:100%">
-                    <img src="@item.Image" alt="" style="height: 230px; object-fit: cover;">
+                    <a href="/chi-tiet/@item.Alias-p@(item.Id)">
+                        <img src="@item.Image" alt="" style="height: 230px; object-fit: cover;">
+                    </a>
                 </div>
 
                 @if (item.IsFeature)
@@ -25,7 +27,7 @@
                 }
 
                 <div class="product_info">
-                    <h6 class="product_name"><a href="single.html">@item.Title</a></h6>
+                    <h6 class="product_name"><a href="/chi-tiet/@item.Alias-p@(item.Id)">@item.Title</a></h6>
                     <div class="product_price">
                         @if (item.IsSale)
                         {
@@ -38,7 +40,7 @@
                     </div>
                 </div>
             </div>
-            <div class="red_button add_to_cart_button"><a href="#">add to cart</a></div>
+            <div class="red_button add_to_cart_button" style="z-index:1;" data-id="@item.Id"><a href="#">add to cart</a></div>
         </div>
     }
 }

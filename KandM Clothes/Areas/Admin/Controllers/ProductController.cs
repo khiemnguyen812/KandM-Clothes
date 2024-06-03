@@ -86,6 +86,7 @@ namespace KandM_Clothes.Areas.Admin.Controllers
                 product.CreatedDate = DateTime.Now;
                 product.ModifiedDate = DateTime.Now;
                 product.IsNew = true;
+                product.Alias = KandM_Clothes.Models.Common.Filter.FilterChar(product.Title);
                 _dbContext.Products.Add(product);
                 _dbContext.SaveChanges();
                 return RedirectToAction("Index");
@@ -115,6 +116,7 @@ namespace KandM_Clothes.Areas.Admin.Controllers
                 product.Image = productInDb.Image;
                 product.ProductCategory = _dbContext.ProductCategories.Find(product.ProductCategoryId);
                 product.ModifiedDate = DateTime.Now;
+                product.Alias = KandM_Clothes.Models.Common.Filter.FilterChar(product.Title);
                 _dbContext.Entry(productInDb).CurrentValues.SetValues(product);
                 _dbContext.SaveChanges();
                 return RedirectToAction("Index");

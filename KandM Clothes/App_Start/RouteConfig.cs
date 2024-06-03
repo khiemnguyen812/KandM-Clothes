@@ -21,6 +21,29 @@ namespace KandM_Clothes
                 namespaces: new[] { "KandM_Clothes.Controllers" }
             );
 
+
+
+            routes.MapRoute(
+                name: "CheckOut",
+                url: "thanh-toan",
+                defaults: new { controller = "ShoppingCart", action = "CheckOut", id = UrlParameter.Optional },
+                namespaces: new[] { "KandM_Clothes.Controllers" }
+            );
+
+            routes.MapRoute(
+                name: "ShoppingCart",
+                url: "gio-hang",
+                defaults: new { controller = "ShoppingCart", action = "Index", id = UrlParameter.Optional },
+                namespaces: new[] { "KandM_Clothes.Controllers" }
+            );
+
+            routes.MapRoute(
+             name: "detailProduct",
+             url: "chi-tiet/{alias}-p{id}",
+             defaults: new { controller = "Product", action = "Detail", alias = UrlParameter.Optional, id = UrlParameter.Optional },
+             namespaces: new[] { "KandM_Clothes.Controllers" }
+         );
+
             routes.MapRoute(
                 name: "Product",
                 url: "san-pham",
