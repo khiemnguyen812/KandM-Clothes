@@ -1,0 +1,222 @@
+﻿@model KandM_Clothes.Models.ShoppingCart
+@{
+    ViewBag.Title = "Giỏ hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/assets/styles/main_styles.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/categories_styles.css">
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/categories_responsive.css">
+
+<div class="container product_section_container">
+    <div class="row">
+        <div class="col product_section clearfix">
+
+            <!-- Breadcrumbs -->
+
+            <div class="breadcrumbs d-flex flex-row align-items-center">
+                <ul>
+                    <li><a href="/home">Home</a></li>
+                    <li class="active"><a href="/gio-hang"><i class="fa fa-angle-right" aria-hidden="true"></i>Giỏ hàng</a></li>
+                </ul>
+            </div>
+
+            @*Main content*@
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title" style="font-size: 30px;">Danh sách sản phẩm</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr class="text-center">
+                                <th>STT</th>
+                                <th>Ảnh sản phẩm</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Giá</th>
+                                <th>Số lượng</th>
+                                <th>Thành tiền</th>
+                                <th>Chức năng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.items.Any())
+                            {
+                                var i = 1;
+                                foreach (var item in Model.items)
+                                {
+                                    <tr class="text-center" id="row_@item.Product.Id">
+                                        <td class="stt">@i</td>
+                                        <td><img src="@item.Product.Image" alt="" style="height: 230px; object-fit: cover;" /></td>
+                                        <td><a style="color: black;" href="/chi-tiet/@item.Product.Alias-p@(item.Product.Id)">@item.Product.Title</a></td>
+                                        <td>@item.Product.Price</td>
+                                        <td>
+                                            <a href="#" style="color: black; margin-right: 10px;" data-id="@item.Product.Id" class="btnDecrease"><i class="fa fa-chevron-left"></i></a>
+                                            <span class="productQuantity">@item.Quantity</span>
+                                            <a href="#" style="color: black; margin-left: 10px;" data-id="@item.Product.Id" class="btnIncrease"><i class="fa fa-chevron-right"></i></a>
+                                        </td>
+                                        <td class="totalProductPrice">@(item.Product.Price * item.Quantity)</td>
+                                        <td>
+                                            <a href="#" class="fas fa-trash btnDelete" style="color: #EB3223;" data-id="@item.Product.Id"></a>
+                                        </td>
+                                    </tr>
+                                    i++;
+                                }
+                                <tr>
+                                    <th colspan="6" class="text-right">Tổng tiền:</th>
+                                    <td id="TotalPrice"></td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="12">Không có dữ liệu</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <!-- /.card -->
+                    <div class="pager-container" style="text-align: right;margin:2%">
+                        <a href="#" id="deleteAll" class="btn btn-danger">Xóa toàn bộ</a>
+                        <a href="/thanh-toan" id="" class="btn btn-success">Thanh toán</a>
+                    </div>
+                </div>
+                <!-- /.card-footer-->
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script src="~/Content/assets/js/categories_custom.js"></script>
+    <script>
+        function updateSTT() {
+            $("tbody tr").each(function (index) {
+                $(this).find(".stt").text(index + 1);
+            });
+        }
+        function calculateTotalPrice() {
+            var total = 0;
+            $("tbody tr").each(function () {
+                var totalProductPrice = parseInt($(this).find('.totalProductPrice').text());
+                if (isNaN(totalProductPrice)) {
+                    totalProductPrice = 0;
+                }
+                console.log(totalProductPrice);
+                total += totalProductPrice;
+            });
+            $('#TotalPrice').text(total + ',00');
+        }
+
+
+
+        $(document).ready(function () {
+            calculateTotalPrice();
+            $('body').on('click', '.btnDelete', function (e) {
+                e.preventDefault();
+                console.log('click');
+                var id = $(this).data('id');
+                var cf = confirm('Are you sure you want to delete this item?');
+                if (cf) {
+                    $.ajax({
+                        url: '/shoppingcart/delete',
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (res) {
+                            if (res.success) {
+                                $('#row_' + id).remove();
+                                showToast('Remove successfully!');
+                                if ($("tbody tr").length == 0) {
+                                    $("tbody").append('<tr><td colspan="4">Không có dữ liệu</td></tr>');
+                                } else {
+                                    updateSTT(); // Update STT after removing a row
+                                }
+                            }
+                            ShowCount();
+                        }
+                    });
+                }
+            });
+            $('body').on('click', '.btnIncrease', function (e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                console.log('click');
+                $.ajax({
+                    url: '/shoppingcart/increasequantity',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (res) {
+                        if (res.success) {
+                            var quantity = $('#row_' + id).find('.productQuantity');
+                            quantity.text(parseInt(quantity.text()) + 1);
+                            var price = $('#row_' + id).find('td:nth-child(4)').text();
+                            var totalPrice = $('#row_' + id).find('td:nth-child(6)');
+                            totalPrice.text(parseInt(quantity.text()) * parseFloat(price) + ',00');
+                            calculateTotalPrice();
+                        }
+                        ShowCount();
+                    }
+                });
+            });
+            $('body').on('click', '.btnDecrease', function (e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                console.log('click');
+                $.ajax({
+                    url: '/shoppingcart/decreasequantity',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (res) {
+                        if (res.success) {
+                            var quantity = $('#row_' + id).find('.productQuantity');
+                            if (parseInt(quantity.text()) == 1) {
+                                $('#row_' + id).remove();
+                                showToast('Remove successfully!');
+                                if ($("tbody tr").length == 1) {
+                                    $("tbody").append('<tr><td colspan="4">Không có dữ liệu</td></tr>');
+                                    $('#TotalPrice').parent().remove();
+                                } else {
+                                    updateSTT();
+                                }
+                                calculateTotalPrice();
+                            } else {
+                                quantity.text(parseInt(quantity.text()) - 1);
+                                var price = $('#row_' + id).find('td:nth-child(4)').text();
+                                var totalPrice = $('#row_' + id).find('td:nth-child(6)');
+                                totalPrice.text((parseInt(quantity.text()) * parseFloat(price)) + ',00');
+                                calculateTotalPrice();
+                            }
+                        }
+                        ShowCount();
+                    }
+                });
+            });
+            $('body').on('click', '#deleteAll', function (e) {
+                e.preventDefault();
+                var cf = confirm('Are you sure you want to delete all items?');
+                if (cf) {
+                    $.ajax({
+                        url: '/shoppingcart/deleteall',
+                        type: 'POST',
+                        success: function (res) {
+                            if (res.success) {
+                                $("tbody tr").remove();
+                                $("tbody").append('<tr><td colspan="4">Không có dữ liệu</td></tr>');
+                                $('#TotalPrice').text('');
+                            }
+                            showToast('Remove all items successfully!');
+                            ShowCount();
+                        }
+                    });
+                }
+            })
+        });
+    </script>
+}

@@ -166,6 +166,7 @@
                             if (res.success) {
                                 ids.forEach(function (id) {
                                     $("#row_" + id).remove();
+                                    showToast("Delete successfully!")
                                 })
                                 if ($("tbody tr").length == 0) {
                                     $("tbody").append('<tr><td colspan="4">Không có dữ liệu</td></tr>');
@@ -188,6 +189,7 @@
                         success: function (res) {
                             if (res.success) {
                                 $("#row_" + id).remove();
+                                showToast("Delete successfully!")
                                 if ($("tbody tr").length == 0) {
                                     $("tbody").append('<tr><td colspan="4">Không có dữ liệu</td></tr>');
                                 } else {
@@ -211,6 +213,7 @@
                         if (res.success) {
                             var iconClass = res.active ? "fa fa-check text-success" : "fas fa-times text-danger";
                             $("#row_" + id + " .btnActive i").attr('class', iconClass);
+                            showToast("Edit active successfully!")
                         }
                     }
                 })

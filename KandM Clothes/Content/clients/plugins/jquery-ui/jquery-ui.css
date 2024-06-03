@@ -732,7 +732,9 @@ button.ui-button::-moz-focus-inner {
 	-ms-touch-action: none;
 	touch-action: none;
 }
-.ui-slider .ui-slider-range {
+.ui-slider .ui-
+
+{
 	position: absolute;
 	z-index: 1;
 	font-size: .7em;

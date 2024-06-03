@@ -15,15 +15,17 @@
             <div class="row">
                 <div class="col">
                     <div class="product_slider_container">
-                        <div class="owl-carousel owl-theme product_slider">
+                        <div class="owl-carousel owl-theme product_slider"  style="height:400px;">
 
                             @foreach (var item in Model)
                             {
-                                <div class="owl-item product_slider_item">
-                                    <div class="product-item">
-                                        <div class="product discount">
+                                <div class="owl-item product_slider_item"  style="height:fit-content;">
+                                    <div class="product-item"  style="height:fit-content;">
+                                        <div class="product discount"  >
                                             <div class="product_image" style="max-height:100%">
-                                                <img src="@item.Image" alt="" style="height: 230px; object-fit: cover;">
+                                                <a href="/chi-tiet/@item.Alias-p@(item.Id)">
+                                                    <img src="@item.Image" alt="" style="height: 230px; object-fit: cover;">
+                                                </a>
                                             </div>
 
                                             <div class="favorite favorite_left"></div>
@@ -33,7 +35,7 @@
                                                 <div class="product_bubble product_bubble_left product_bubble_green d-flex flex-column align-items-center"><span>new</span></div>
                                             }
                                             <div class="product_info">
-                                                <h6 class="product_name"><a href="single.html">@item.Title</a></h6>
+                                                <h6 class="product_name"><a href="/chi-tiet/@item.Alias-p@(item.Id)">@item.Title</a></h6>
                                                 <div class="product_price">
                                                     @if (item.IsSale)
                                                     {
@@ -45,6 +47,7 @@
                                                     }
                                                 </div>
                                             </div>
+                                            <div class="red_button add_to_cart_button" style="z-index:1;" data-id="@item.Id"><a href="#">add to cart</a></div>
                                         </div>
                                     </div>
                                 </div>
