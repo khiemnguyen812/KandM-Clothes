@@ -18,15 +18,17 @@ namespace KandM_Clothes.Models.EF
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Code { get; set; }
-        [Required]
+        [Required(ErrorMessage ="Tên khách hàng không được để trống")]
         public string CustomerName { get; set; }
-        [Required]
+        [Required(ErrorMessage ="Số điện thoại không được để trống")]
         public string Phone { get; set; }
-        [Required]
+        [Required(ErrorMessage ="Địa chỉ không được để trống")]
         public string Address { get; set; }
+        [Required(ErrorMessage = "Email không được để trống")]
+        public string Email { get; set; }
         [Required]
-        public decimal TotalAmount { get; set; }
         public decimal TotalPrice { get; set; }
+        public int TypePayment { get; set; }
         [Required]
         public int Quantity { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }

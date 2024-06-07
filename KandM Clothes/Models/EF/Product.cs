@@ -42,6 +42,7 @@ namespace KandM_Clothes.Models.EF
         public string SeoDescription { get; set; }
         public string SeoKeywords { get; set; }
         public string Alias { get; set; }
+        public int ViewCount { get; set; }
         public virtual ProductCategory ProductCategory { get; set; }
         public virtual ICollection<ProductImage> ProductImages { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

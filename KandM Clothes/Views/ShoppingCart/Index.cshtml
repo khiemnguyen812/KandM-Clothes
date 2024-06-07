@@ -70,13 +70,15 @@
                             else
                             {
                                 <tr>
-                                    <td colspan="12">Không có dữ liệu</td>
+                                    <td colspan="12">Không có sản phẩm nào trong giỏ hàng!</td>
                                 </tr>
                             }
                         </tbody>
                     </table>
                 </div>
 
+                @if (Model != null && Model.items.Any())
+                {
                 <!-- /.card-body -->
                 <div class="card-footer">
                     <!-- /.card -->
@@ -86,6 +88,7 @@
                     </div>
                 </div>
                 <!-- /.card-footer-->
+                }
             </div>
 
 
@@ -140,6 +143,7 @@
                                 }
                             }
                             ShowCount();
+                            calculateTotalPrice();
                         }
                     });
                 }
@@ -208,7 +212,7 @@
                         success: function (res) {
                             if (res.success) {
                                 $("tbody tr").remove();
-                                $("tbody").append('<tr><td colspan="4">Không có dữ liệu</td></tr>');
+                                $("tbody").append('<tr><td colspan="4">Không có sản phẩm nào trong giỏ hàng!</td></tr>');
                                 $('#TotalPrice').text('');
                             }
                             showToast('Remove all items successfully!');
