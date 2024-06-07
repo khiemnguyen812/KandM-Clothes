@@ -47,6 +47,6 @@ namespace KandM_Clothes.Models.Common
             // Return the filtered string
             return str;
         }
-
     }
+
 }

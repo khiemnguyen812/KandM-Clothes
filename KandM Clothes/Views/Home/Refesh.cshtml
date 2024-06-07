@@ -1,0 +1,51 @@
+﻿@model KandM_Clothes.Models.StatisticViewModel
+@if (Model != null)
+{
+    <div class="statistics" style="margin-top:20px">
+        <h5>Thống kê truy cập</h5>
+        <table>
+            <tr>
+                <td style="text-align: left;">Hôm nay:</td>
+                <td style="text-align: right; position: absolute; right: 0;">@Model.Today</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: left;">Hôm qua:</td>
+                <td style="text-align: right; position: absolute; right: 0;">@Model.Yesterday</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: left;">Tuần này:</td>
+                <td style="text-align: right; position: absolute; right: 0;">@Model.Week</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: left;">Tuần trước:</td>
+                <td style="text-align: right; position: absolute; right: 0;">@Model.LastWeek</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: left;">Tháng này:</td>
+                <td style="text-align: right; position: absolute; right: 0;">@Model.Month</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: left;">Tháng trước:</td>
+                <td style="text-align: right; position: absolute; right: 0;">@Model.LastMonth</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: left;">Tổng truy cập:</td>
+                <td style="text-align: right; position: absolute; right: 0;">@Model.TotalAccess</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: left;">Số người online:</td>
+                <td style="text-align: right; position: absolute; right: 0;">@ViewBag.VisitorsOnline</td>
+            </tr>
+
+
+
+        </table>
+    </div>
+}

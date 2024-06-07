@@ -1,7 +1,10 @@
 ﻿using KandM_Clothes.Models;
 using KandM_Clothes.Models.EF;
+using System;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Razor.Parser.SyntaxTree;
+using System.Web.UI.WebControls;
 
 namespace KandM_Clothes.Controllers
 {
@@ -28,9 +31,74 @@ namespace KandM_Clothes.Controllers
                 cart = new ShoppingCart();
                 Session["Cart"] = cart;
             }
-            return View();
+            ViewBag.Cart = cart;
+            return View(new Order());
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CheckOut(CustomerInfo cusInfo)
+        {
+            var code = new { success = false, msg = "", code = -1 };
+            if(ModelState.IsValid)
+            {
+                ShoppingCart cart = Session["Cart"] as ShoppingCart;
+                if (cart != null && cart.items.Count > 0)
+                {
+                    Order order = new Order();
+                    order.CustomerName = cusInfo.CustomerName;
+                    order.Phone = cusInfo.Phone;
+                    order.Address = cusInfo.Address;
+                    order.Email = cusInfo.Email;
+                    order.TypePayment = cusInfo.TypePayment;
+                    order.TotalPrice = cart.GetTotalPrice();
+                    order.Quantity = cart.GetTotalQuantity();
+                    order.Code = "DH" + DateTime.Now.ToString("ddMMyyyyHHmmss");
+                    order.CreatedDate = DateTime.Now;
+                    order.Code = Models.Common.Common.CreateCode();
+                    var ProductList = "";
+                    foreach (var item in cart.items)
+                    {
+                        OrderDetail orderDetail = new OrderDetail();
+                        orderDetail.ProductId = item.Product.Id;
+                        orderDetail.Quantity = item.Quantity;
+                        orderDetail.Price = item.Product.Price;
+                        order.OrderDetails.Add(orderDetail);
+                        ProductList += "<tr>";
+                        ProductList += "<td style='color:#636363;border:1px solid #e5e5e5;padding:12px;text-align:left;vertical-align:middle;font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif;word-wrap:break-word'>"+ item.Product.Title +"</td>";
+                        ProductList += "<td style='color:#636363;border:1px solid #e5e5e5;padding:12px;text-align:left;vertical-align:middle;font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif'>" + item.Quantity + "</td>";
+                        ProductList += "<td style='color:#636363;border:1px solid #e5e5e5;padding:12px;text-align:left;vertical-align:middle;font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif'><span><span>$ </span>" + item.Product.Price+ "&nbsp;</span></td>";
+                        ProductList += "</tr>";
+                    }
+                    _dbContext.Orders.Add(order);
+                    _dbContext.SaveChanges();
+                    string MailContent = System.IO.File.ReadAllText(Server.MapPath("~/Content/template/send2.html"));
+
+                    MailContent = MailContent.Replace("{{CustomerName}}", order.CustomerName);
+                    MailContent = MailContent.Replace("{{CustomerPhone}}", order.Phone);
+                    MailContent = MailContent.Replace("{{CustomerAddress}}", order.Address);
+                    MailContent = MailContent.Replace("{{CustomerEmail}}", order.Email);
+                    MailContent = MailContent.Replace("{{ProductList}}", ProductList);
+                    MailContent = MailContent.Replace("{{TotalPrice}}", order.TotalPrice.ToString());
+                    MailContent = MailContent.Replace("{{OrderCode}}", order.Code);
+                    MailContent = MailContent.Replace("{{OrderDate}}", order.CreatedDate.ToString());
+                    MailContent = MailContent.Replace("{{PaymentMethod}}", order.TypePayment == 1 ? "Thanh toán khi nhận hàng" : "Thanh toán qua thẻ");
+                    MailContent = MailContent.Replace("{{OrderQuantity}}", order.Quantity.ToString());
+                    KandM_Clothes.Models.Common.Common.SendMail("Đơn hàng mới từ K&M Clothes","Đơn hàng "+ order.Code, MailContent, order.Email);
+                    cart.ClearCart();
+                    code = new { success = true, msg = "Đặt hàng thành công", code = 1 };
+                }
+                else
+                {
+                    code = new { success = false, msg = "Giỏ hàng trống", code = 0 };
+                }
+            }
+            else
+            {
+                code = new { success = false, msg = "Dữ liệu không hợp lệ", code = -1 };
+            }
+            return Json(code, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult ShowCount()
         {
             ShoppingCart cart = Session["Cart"] as ShoppingCart;

@@ -41,6 +41,7 @@ namespace KandM_Clothes.Models
         public DbSet<SystemSetting> SystemSettings { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<Statistic> Statistics { get; set; }
 
 
         public static ApplicationDbContext Create()

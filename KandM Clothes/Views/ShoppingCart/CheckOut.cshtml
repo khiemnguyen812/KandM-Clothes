@@ -1,4 +1,9 @@
 ﻿@model KandM_Clothes.Models.EF.Order
+@using KandM_Clothes.Models
+@{
+    var cart = ViewBag.Cart as ShoppingCart;
+}
+
 @{
     ViewBag.Title = "Thanh toán";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -29,59 +34,82 @@
                 <h1>Thanh toán</h1>
                 <p>Vui lòng kiểm tra lịa thông tin đơn hàng!</p>
             </div>
+            @if (cart != null && cart.items.Any())
+            {
+                @*Main content*@
+                <div class="row main-content">
+                    <div class="col-md-8">
+                        <h3>Thông tin khách hàng</h3>
+                        @using (Ajax.BeginForm("CheckOut", "ShoppingCart", new AjaxOptions
+                        {
+                            HttpMethod = "POST",
+                            UpdateTargetId = "load_data",
+                            OnComplete = "CheckOutSuccess()",
+                            OnFailure = "CheckOutFailure",
+                        }, new {@Id="myForm"}))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="form-group">
+                                <label for="customerName">Họ tên khách hàng:</label>
+                                <input type="text" class="form-control" id="CustomerName" name="CustomerName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phoneNumber">Số điện thoại:</label>
+                                <input type="text" class="form-control" id="Phone" name="Phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Địa chỉ:</label>
+                                <input type="text" class="form-control" id="Address" name="Address" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" class="form-control" id="Email" name="Email" required>
+                                <div id="result"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="payment">Hình thức thanh toán</label>
+                                <select class="form-control" id="TypePayment" name="TypePayment" required>
+                                    <option value="1" selected>Thanh toán khi nhận hàng (COD)</option>
+                                    <option value="2">Thanh toán qua thẻ</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-block btn-success">Đặt hàng</button>
+                        }
+                    </div>
 
-            @*Main content*@
-            <div class="row">
-                <div class="col-md-8">
-                    <h3>Thông tin khách hàng</h3>
-                    <div class="form-group">
-                        <label for="customerName">Họ tên khách hàng:</label>
-                        <input type="text" class="form-control" id="customerName" name="customerName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="phoneNumber">Số điện thoại:</label>
-                        <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="address">Địa chỉ:</label>
-                        <input type="text" class="form-control" id="address" name="address" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                        <div id="result"></div>
-                    </div>
-                    <button type="submit" class="btn btn-block btn-success">Đặt hàng</button>
-                </div>
-                <div class="col-md-4">
-                    <h3>Giỏ hàng</h3>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Tên sản phẩm</th>
-                                <th>Thành tiền</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model != null && Model.items.Any())
-                            {
-                                foreach (var item in Model.items)
+                    <div class="col-md-4">
+                        <h3>Giỏ hàng</h3>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && cart.items.Any())
                                 {
+                                    foreach (var item in cart.items)
+                                    {
+                                        <tr>
+                                            <td>@item.Product.Title</td>
+                                            <td class="totalProductPrice">@(item.Product.Price * item.Quantity)</td>
+                                        </tr>
+                                    }
                                     <tr>
-                                        <td>@item.Product.Title</td>
-                                        <td class="totalProductPrice">@(item.Product.Price * item.Quantity)</td>
+                                        <td class="text-left">Tổng tiền:</td>
+                                        <td id="TotalPrice"></td>
                                     </tr>
                                 }
-                                <tr>
-                                    <td class="text-left">Tổng tiền:</td>
-                                    <td id="TotalPrice"></td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-
+            }
+            else
+            {
+                <div class="alert alert-warning">Không có sản phẩm nào trong giỏ hàng!</div>
+            }
         </div>
     </div>
 </div>
@@ -89,6 +117,40 @@
 @section scripts{
     <script src="~/Content/assets/js/categories_custom.js"></script>
     <script>
+        function toggleSpinner(show) {
+            var spinner = document.getElementById('spinnerContainer');
+            console.log("aksdn");
+            spinner.style.display = show ? 'block' : 'none';
+            if (show) {
+                $('#spinner').show();
+                $('#overlay').show();
+            } else {
+                $('#spinner').hide();
+                $('#overlay').hide();
+            }
+        }
+
+        function CheckOutSuccess(rs) {
+            if (rs.success) {
+                $('.main-content').empty();
+
+                $('<div>').addClass('col-md-12 alert alert-warning').text('Đặt hàng thành công').appendTo('.main-content');
+
+                showToast('Đặt hàng thành công');
+            } else {
+                $('.main-content').empty();
+
+                $('<div>').addClass('alert alert-warning').text('Đặt hàng thất bại').appendTo('.main-content');
+
+            }
+        }
+
+
+
+        function CheckOutFailure() {
+            location.reload();
+        }
+
         function calculateTotalPrice() {
             var total = 0;
             $("tbody tr").each(function () {
@@ -96,36 +158,91 @@
                 if (isNaN(totalProductPrice)) {
                     totalProductPrice = 0;
                 }
-                console.log(totalProductPrice);
                 total += totalProductPrice;
             });
             $('#TotalPrice').text(total + ',00');
         }
 
-        const validateEmail = (email) => {
-            return email.match(
-                /^(([^<>()[\]\\.,;:\s@@\"]+(\.[^<>()[\]\\.,;:\s@@\"]+)*)|(\".+\"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            );
-        };
-
-        const validate = () => {
-            const $result = $('#result');
-            const email = $('#email').val();
-            $result.text('');
-
-            if (validateEmail(email)) {
-                $result.text('Valid.');
-                $result.css('color', 'green');
-            } else {
-                $result.text('Invalid.');
-                $result.css('color', 'red');
-            }
-            return false;
-        }
-
-        $('#email').on('input', validate);
         $(document).ready(function () {
             calculateTotalPrice();
+            $('#myForm').on('submit', function (e) {
+                e.preventDefault();
+                toggleSpinner(true); // Show the spinner
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (result) {
+                        CheckOutSuccess(result);
+                        toggleSpinner(false); // Hide the spinner
+                        ShowCount();
+                    },
+                    error: function () {
+                        CheckOutFailure();
+                        toggleSpinner(false); // Hide the spinner
+                        ShowCount();
+                    }
+                });
+            });
+
+            // Initially disable the button
+            $('button[type="submit"]').prop('disabled', true);
+            $('#myForm').validate({
+                rules: {
+                    CustomerName: {
+                        required: true,
+                        minlength: 2
+                    },
+                    Phone: {
+                        required: true,
+                        number: true,
+                        minlength: 10,
+                        maxlength: 11
+                    },
+                    Address: {
+                        required: true,
+                        minlength: 5
+                    },
+                    Email: {
+                        required: true,
+                        email: true
+                    },
+                    TypePayment: {
+                        required: true
+                    }
+                },
+                messages: {
+                    CustomerName: {
+                        required: "Vui lòng nhập tên của bạn",
+                        minlength: "Tên của bạn phải có ít nhất 2 ký tự"
+                    },
+                    Phone: {
+                        required: "Vui lòng nhập số điện thoại của bạn",
+                        number: "Vui lòng nhập một số điện thoại hợp lệ",
+                        minlength: "Số điện thoại của bạn phải có ít nhất 10 chữ số",
+                        maxlength: "Số điện thoại của bạn không được quá 11 chữ số"
+                    },
+                    Address: {
+                        required: "Vui lòng nhập địa chỉ của bạn",
+                        minlength: "Địa chỉ của bạn phải có ít nhất 5 ký tự"
+                    },
+                    Email: {
+                        required: "Vui lòng nhập email của bạn",
+                        email: "Vui lòng nhập một địa chỉ email hợp lệ"
+                    },
+                    TypePayment: {
+                        required: "Vui lòng chọn hình thức thanh toán"
+                    }
+                },
+                onkeyup: function (element) {
+                    $(element).valid(); 
+                    if ($('#myForm').valid()) { 
+                        $('button[type="submit"]').prop('disabled', false); 
+                    } else {
+                        $('button[type="submit"]').prop('disabled', true);
+                    }
+                }
+            });
         });
     </script>
 }

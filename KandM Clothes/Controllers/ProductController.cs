@@ -59,6 +59,13 @@ namespace KandM_Clothes.Controllers
         public ActionResult Detail(string alias, int id)
         {
             var product = _dbContext.Products.Find(id);
+            if (product != null)
+            {
+                _dbContext.Products.Attach(product);
+                product.ViewCount++;
+                _dbContext.Entry(product).Property(x => x.ViewCount).IsModified = true;
+                _dbContext.SaveChanges();
+            }
             return View(product);
         }
 
