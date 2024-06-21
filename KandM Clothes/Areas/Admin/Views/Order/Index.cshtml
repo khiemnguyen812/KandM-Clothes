@@ -1,0 +1,226 @@
+﻿@model PagedList.PagedList<KandM_Clothes.Models.EF.Order>
+@using PagedList.Mvc;
+@using PagedList;
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@{
+    var dateOptions = new SelectList(new List<SelectListItem>
+{
+        new SelectListItem { Text = "Latest", Value = "latest" },
+        new SelectListItem { Text = "Oldest", Value = "oldest" }
+    }, "Value", "Text", ViewBag.Date);
+}
+
+@section naviheader {
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/home" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/order" class="nav-link">Đơn hàng</a>
+        </li>
+    </ul>
+
+}
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Quản lý đơn hàng</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Đơn hàng</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+
+<section class="content">
+
+
+    @using (Html.BeginForm("Index", "Order", FormMethod.Get))
+    {
+        <div class="d-flex justify-content-between">
+            <div class="input-group" style="margin-bottom: 2%; border-radius: 10px; width: 50%">
+                <span class="input-group-text" id="addon-wrapping" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;"><i class="bi bi-search"></i></span>
+                @Html.TextBox("searchTxt", null, new { @class = "form-control", @placeholder = "Tìm kiếm", @aria_label = "find", @aria_describedby = "addon-wrapping", style = "border-radius: 0;" })
+                <span class="input-group-append">
+                    <button type="submit" class="btn btn-info btn-flat" style="border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </span>
+            </div>
+
+            @* <div class="form-group" style="text-align: right; width: 30%">
+                    @Html.DropDownList("categoryFilter", ViewBag.ProcuctCategories as SelectList, "-Lọc theo danh mục sản phẩm-", new { @class = "form-control", @placeholder = "Mã sản phẩm", @selected = ViewBag.CategoryFilter, @id = "categoryFilter" })
+                </div>*@
+        </div>
+
+    }
+
+    <div class="card">
+
+        <div class="card-header">
+            <h3 class="card-title" style="font-size: 30px;">Danh sách đơn hàng</h3>
+
+            <div class="card-tools">
+                <a href="#" class="btn btn-danger" id="btnDeleteAll">Xóa toàn bộ</a>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 3%;"><input type="checkbox" id="selectAll" /></th>
+                        <th style="width: 5%;" class="text-center">STT</th>
+                        <th style="width: 15%;" class="text-center">Mã đơn hàng</th>
+                        <th style="width: 13%;" class="text-center">Tên khách hàng</th>
+                        <th style="width: 10%;" class="text-center">Số điện thoại</th>
+                        <th style="width: 12%;" class="text-center">Ngày đặt hàng</th>
+                        <th style="width: 15%;" class="text-center">Tổng tiền</th>
+                        <th style="width: 20%;" class="text-center">Phương thức thanh toán</th>
+                        <th style="width: 7%" class="text center">Chức năng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        var listModel = Model.ToList();
+                        foreach (var item in Model)
+                        {
+                            <tr id="row_@item.Id">
+                                <td><input type="checkbox" class="selectedItem" data-id="@item.Id" /></td>
+                                <td class="stt text-center">@((ViewBag.Page - 1) * ViewBag.PageSize + listModel.IndexOf(item) + 1)</td>
+                                <td class="text-center">@item.Code</td>
+                                <td class="text-center">@item.CustomerName</td>
+                                <td class="text-center">@item.Phone</td>
+                                <td class="text-center">@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy") : "")</td>
+                                <td class="text-center">@item.TotalPrice VNĐ</td>
+                                <td class="text-center">
+                                    @if (@item.TypePayment == 1)
+                                    {
+                                        @:Thanh toán khi nhận hàng (COD)
+                                    }
+                                    else if (@item.TypePayment == 2)
+                                    {
+                                        @:Thanh toán qua thẻ
+                                    }
+                                </td>
+
+                                <td class="text-center">
+                                    <a href="/admin/order/edit/@item.Id" class="fas fa-pen" style="color: #f29d38; margin-right: 3px;"></a>
+                                    <a href="#" class="fas fa-trash btnDelete" style="color: #EB3223; margin-right: 3px;" data-id="@item.Id"></a>
+                                    <a href="#" class="fa fa-info" data-id="@item.Id" style="color: #007bff;"></a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="10">Không có dữ liệu</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+            <div class="pager-container" style="text-align: right">
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+            </div>
+        </div>
+    </div>
+    <!-- /.card -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xóa</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts {
+    <script>
+        function updateSTT() {
+            $("tbody tr").each(function (index) {
+                $(this).find(".stt").text(index + 1);
+            });
+        }
+        $(document).ready(function () {
+            $(document).ready(function () {
+                $('body').on('click', '.btnDelete', function (e) {
+                    e.preventDefault();
+                    var id = $(this).data('id');
+                    $('#confirmDeleteModal').data('id', id);
+                    $('#confirmDeleteModal .modal-body').text('Bạn có chắc chắn muốn xóa đơn hàng này không?');
+                    $('#confirmDeleteModal').modal('show');
+                });
+
+                $('#confirmDelete').on('click', function () {
+                    var id = $('#confirmDeleteModal').data('id');
+                    $('#confirmDeleteModal').modal('hide'); 
+                    if (id === 'all') {
+                        $.ajax({
+                            url: '/admin/order/deleteall',
+                            type: 'POST',
+                            success: function (res) {
+                                if (res.success) {
+                                    $("tbody tr").remove();
+                                    $("tbody").append('<tr><td colspan="4">Không có sản phẩm nào trong giỏ hàng!</td></tr>');
+                                    $('#TotalPrice').text('');
+                                    showToast('Remove all items successfully!');
+                                }
+                            }
+                        });
+                    } else {
+                        // Your existing ajax call to delete the item
+                        $.ajax({
+                            url: '/admin/order/delete',
+                            type: 'POST',
+                            data: { id: id },
+                            success: function (res) {
+                                if (res.success) {
+                                    $('#row_' + id).remove();
+                                    showToast('Remove successfully!');
+                                    updateSTT();
+                                    if ($("tbody tr").length == 0) {
+                                        $("tbody").append('<tr><td colspan="4">Không có dữ liệu</td></tr>');
+                                    } else {
+                                        updateSTT();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+
+            })
+        });
+    </script>
+}

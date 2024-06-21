@@ -1,4 +1,4 @@
-:root {
+﻿:root {
     --background:#f3f1f9;
     --toast-background: #292B2D;
     --toast-success: #9CE6A8;
@@ -17,7 +17,6 @@ html {
 
 body {
     background-color: var(--background);
-    display: grid;
     place-items: center;
     font-size: 16px;
 }
