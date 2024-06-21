@@ -53,7 +53,7 @@ namespace KandM_Clothes.Controllers
                     order.TypePayment = cusInfo.TypePayment;
                     order.TotalPrice = cart.GetTotalPrice();
                     order.Quantity = cart.GetTotalQuantity();
-                    order.Code = "DH" + DateTime.Now.ToString("ddMMyyyyHHmmss");
+                    order.Code = "DH" + DateTime.Now.ToString("ddMMyyHHmmss");
                     order.CreatedDate = DateTime.Now;
                     order.Code = Models.Common.Common.CreateCode();
                     var ProductList = "";
@@ -69,6 +69,18 @@ namespace KandM_Clothes.Controllers
                         ProductList += "<td style='color:#636363;border:1px solid #e5e5e5;padding:12px;text-align:left;vertical-align:middle;font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif'>" + item.Quantity + "</td>";
                         ProductList += "<td style='color:#636363;border:1px solid #e5e5e5;padding:12px;text-align:left;vertical-align:middle;font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif'><span><span>$ </span>" + item.Product.Price+ "&nbsp;</span></td>";
                         ProductList += "</tr>";
+
+                        // Decrease product quantity in stock
+                        var productInStock = _dbContext.Products.FirstOrDefault(p => p.Id == item.Product.Id);
+                        if (productInStock != null)
+                        {
+                            productInStock.Quantity -= item.Quantity; // Assuming you have a Quantity field in your Product model
+                            if(productInStock.Quantity < 0)
+                            {
+                                code = new { success = false, msg = "Số lượng sản phẩm trong kho không đáp ứng yêu cầu khách hàng", code = 0 };
+                                return Json(code, JsonRequestBehavior.AllowGet);
+                            }
+                        }
                     }
                     _dbContext.Orders.Add(order);
                     _dbContext.SaveChanges();

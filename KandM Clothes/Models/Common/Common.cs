@@ -46,8 +46,11 @@ namespace KandM_Clothes.Models.Common
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                // Ghi chi tiết ngoại lệ
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
                 rs = false;
             }
+
             return rs;
         }
         public static string FormatNumber(object value, int SoSauDauPhay = 2)
