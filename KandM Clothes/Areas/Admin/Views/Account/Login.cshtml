@@ -1,0 +1,105 @@
+﻿@model KandM_Clothes.Models.LoginViewModel
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Areas/Admin/Views/Shared/_EmptyLayout .cshtml";
+}
+
+<link href="~/Content/assets/styles/styleLogin.css" rel="stylesheet" />
+
+<div class="content">
+    <div class="login-wrapper">
+        <div class="login-side">
+            <div class="my-form__wrapper">
+                <div class="login-welcome-row">
+                    <h1>Welcome back &#x1F44F;</h1>
+                    <p>Please enter your details!</p>
+                </div>
+                @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "my-form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="socials-row">
+                        <a href="#"
+                           title="Use Google">
+                            <img src="~/Content/assets/images/google.png" alt="Google">
+                            Log in with Google
+                        </a>
+                        <a href="#"
+                           title="Use Apple">
+                            <img src="~/Content/assets/images/apple.png" alt="Apple">
+                            Log in with Apple
+                        </a>
+                    </div>
+                    <div class="divider">
+                        <div class="divider-line"></div>
+                        Or
+                        <div class="divider-line"></div>
+                    </div>
+
+                    <div class="text-field">
+                        <label for="email">Email:</label>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @type = "email", @placeholder = "Your Email", @required = "required", @id = "email", @name = "email" })
+                        <img alt="Email Icon"
+                             title="Email Icon"
+                             src="~/Content/assets/images/email.svg">
+                    </div>
+                    <div class="text-field">
+                        <label for="password">Password:</label>
+                        @Html.TextBoxFor(m => m.Password, new { @class = "form-control", @type = "password", @placeholder = "Your Password", @required = "required", @id = "password", @name = "password" })
+                        <img alt="Password Icon"
+                             title="Password Icon"
+                             src="~/Content/assets/images/password.svg">
+                    </div>
+                    <div class="my-form__row">
+                        @Html.CheckBoxFor(m => m.RememberMe, new { @class = "my-form__checkbox", @id = "remember" })
+                        <label for="remember">Remember me</label>
+                    </div>
+                    <input type="submit" class="my-form__button" value="Login">
+                    <div class="my-form__actions">
+                        <div class="my-form__row">
+                            <span>Did you forget your password?</span>
+                            <a href="#" title="Reset Password">
+                                Reset Password
+                            </a>
+                        </div>
+                        <div class="my-form__signup">
+                            <a href="#" title="Create Account">
+                                Create Account
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="info-side">
+            <img src="~/Content/Logo.ico" alt="Mock" class="mockup">
+            <div class="welcome-message">
+                <h2>Navitron Maps! 👋</h2>
+                <p>
+                    Your ultimate guide to navigating the world
+                    and discovering new places with ease.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script src="~/Scripts/jsToast.js"></script>
+    <script>
+        @if (ViewBag.ResultLogin != null)
+        {
+            if (ViewBag.ResultLogin == true)
+            {
+                <text>
+                showToast("Login successful!");
+                </text>
+            }
+            else
+            {
+                <text>
+                showToastError("Login failed. Please try again.");
+                </text>
+            }
+        }
+    </script>
+}
