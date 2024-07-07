@@ -30,8 +30,9 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="~/Content/clients/dist/css/adminlte.min.css">
     <link href="~/Content/PagedList.css" rel="stylesheet" />
-    <link href="~/Content/assets/styles/toastStyles.css" rel="stylesheet"  type="text/css"/>
+    <link href="~/Content/assets/styles/toastStyles.css" rel="stylesheet" type="text/css" />
 
+    @RenderSection("css", required: false)
 </head>
 <body class="hold-transition sidebar-mini">
     <figure class="notification">

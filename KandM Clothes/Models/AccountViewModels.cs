@@ -65,6 +65,13 @@ namespace KandM_Clothes.Models
     public class RegisterViewModel
     {
         [Required]
+        public string UserName { get; set; }
+        [Required]
+        public string FullName { get; set; }
+        public string Phone { get; set; }
+        [Required]
+		public string Role { get; set; }
+		[Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
