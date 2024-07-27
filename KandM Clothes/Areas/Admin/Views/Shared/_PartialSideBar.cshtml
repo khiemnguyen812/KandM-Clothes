@@ -106,6 +106,14 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a href="/admin/subscribe" class="nav-link">
+                    <i class="nav-icon fas fa-th"></i>
+                    <p>
+                        Quản lý đăng ký
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item">
                 @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { @class = "navbar-form" }))
                 {
                     @Html.AntiForgeryToken()

@@ -1,0 +1,106 @@
+﻿@model IEnumerable<KandM_Clothes.Models.EF.Subscribe>
+@{
+    ViewBag.Title = "Quản lý đăng ký";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@section naviheader {
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/home" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/subscribe" class="nav-link">@ViewBag.Title</a>
+        </li>
+    </ul>
+
+}
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Quản lý Quyền</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Quản lý đăng ký</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title" style="font-size: 30px;">Danh sách đăng ký</h3>
+
+            <div class="card-tools">
+                <a href="#" class="btn btn-danger" id="btnDeleteAll">Xóa toàn bộ</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="text-center">STT</th>
+                        <th class="text-center">Email</th>
+                        <th class="text-center">Chức năng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        var i = 1;
+                        foreach (var item in Model)
+                        {
+                            <tr id="row_@item.Id">
+                                <td class="text-center">@i</td>
+                                <td class="text-center role-name">@item.Email</td>
+                                <td class="text-center">
+                                    <a href="#" class="fas fa-trash btnDelete" style="color: #EB3223;" data-id="@item.Id"></a>
+                                </td>
+                            </tr>
+                            i++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4">Không có dữ liệu</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Modal Delete -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xóa</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>

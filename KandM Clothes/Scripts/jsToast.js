@@ -1,5 +1,6 @@
 ﻿function showToast(message) {
-    var notification = document.querySelector('.notification');
+    console.log("show Success Toast");
+    var notification = document.querySelector('#toastSuccess');
     var toastMessage = document.querySelector('#toastMessage');
     toastMessage.textContent = message;
     notification.classList.add('show');
@@ -11,7 +12,8 @@
 }
 
 function showErrorToast(message) {
-    var notificationError = document.querySelector('.notification--error');
+    console.log("show Error Toast");
+    var notificationError = document.querySelector('#toastError');
     var toastMessageError = document.querySelector('#toastMessageError');
     toastMessageError.textContent = message;
     notificationError.classList.add('show');

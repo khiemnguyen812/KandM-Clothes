@@ -8,7 +8,7 @@ namespace KandM_Clothes.Areas.Admin.Controllers
 {
     public class HomeController : Controller
     {
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         // GET: Admin/Home
         public ActionResult Index()
         {

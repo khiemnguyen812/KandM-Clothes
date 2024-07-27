@@ -150,6 +150,17 @@ namespace KandM_Clothes.Models.Common
             while (_dbContext.Orders.Any(o => o.Code == code));
             return code;
         }
-
+        public static bool IsMail(string mail)
+        {
+			try
+			{
+				var addr = new System.Net.Mail.MailAddress(mail);
+				return addr.Address == mail;
+			}
+			catch
+			{
+				return false;
+			}
+		}
     }
 }

@@ -185,6 +185,7 @@
     <Compile Include="Areas\Admin\Controllers\ProductController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProductImageController.cs" />
     <Compile Include="Areas\Admin\Controllers\RoleController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SubscribeController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
+    <Compile Include="Controllers\SubscribeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -260,6 +262,7 @@
     <Content Include="Content\assets\images\single_3_thumb.jpg" />
     <Content Include="Content\assets\images\slider_1.jpg" />
     <Content Include="Content\assets\js\categories_custom.js" />
+    <Content Include="Content\assets\js\subscribe_custom.js" />
     <Content Include="Content\assets\js\contact_custom.js" />
     <Content Include="Content\assets\js\custom.js" />
     <Content Include="Content\assets\js\jquery-3.2.1.min.js" />
@@ -283,6 +286,7 @@
     <Content Include="Content\assets\styles\bootstrap4\bootstrap.min.css" />
     <Content Include="Content\assets\styles\bootstrap4\bootstrap.min.js" />
     <Content Include="Content\assets\styles\bootstrap4\popper.js" />
+    <Content Include="Content\assets\styles\toastStyles.css" />
     <Content Include="Content\assets\styles\loadingStyle.css" />
     <Content Include="Content\assets\styles\categories_responsive.css" />
     <Content Include="Content\assets\styles\categories_styles.css" />
@@ -293,7 +297,6 @@
     <Content Include="Content\assets\styles\single_responsive.css" />
     <Content Include="Content\assets\styles\single_styles.css" />
     <Content Include="Content\assets\styles\styleLogin.css" />
-    <Content Include="Content\assets\styles\toastStyles.css" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -3244,6 +3247,7 @@
     <Content Include="Areas\Admin\Views\Account\Register.cshtml" />
     <Content Include="Areas\Admin\Views\Account\Login.cshtml" />
     <Content Include="Areas\Admin\Views\Account\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Subscribe\Index.cshtml" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jsShoppingCart.js" />
     <Content Include="Scripts\jsToast.js" />
@@ -3302,6 +3306,8 @@
     <Content Include="Views\ShoppingCart\Index.cshtml" />
     <Content Include="Views\ShoppingCart\CheckOut.cshtml" />
     <Content Include="Views\Home\Refesh.cshtml" />
+    <Content Include="Views\Product\_Partial_RecommendedProduct.cshtml" />
+    <Content Include="Views\Subscribe\_Partial_Subscribe.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
