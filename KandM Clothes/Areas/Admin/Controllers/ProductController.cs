@@ -29,6 +29,11 @@ namespace KandM_Clothes.Areas.Admin.Controllers
             var pageIndex = page.HasValue ? Convert.ToInt32(page.Value) : 1;
             var products = _dbContext.Products.AsQueryable();
 
+            if(pageIndex > (products.Count() / pageSize + 1) )
+            {
+				pageIndex = products.Cast<Product>().Count() / pageSize + 1;
+			}
+
             if (!string.IsNullOrEmpty(searchTxt))
             {
                 products = products.Where(n => n.Title.Contains(searchTxt));
@@ -43,7 +48,7 @@ namespace KandM_Clothes.Areas.Admin.Controllers
             }
             var pageProducts = products.OrderByDescending(x => x.Id).ToPagedList(pageIndex, pageSize);
             ViewBag.PageSize = pageSize;
-            ViewBag.Page = page;
+            ViewBag.Page = pageIndex;
             ViewBag.SearchTxt = searchTxt;
             ViewBag.CategoryFilter = categoryFilter;
             ViewBag.ProcuctCategories = new SelectList(_dbContext.ProductCategories.ToList(), "Id", "Title");

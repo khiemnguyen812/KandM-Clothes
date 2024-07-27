@@ -46,16 +46,16 @@
                             UpdateTargetId = "load_data",
                             OnComplete = "CheckOutSuccess()",
                             OnFailure = "CheckOutFailure",
-                        }, new {@Id="myForm"}))
+                        }, new { @Id = "myForm" }))
                         {
                             @Html.AntiForgeryToken()
                             <div class="form-group">
                                 <label for="customerName">Họ tên khách hàng:</label>
-                                <input type="text" class="form-control" id="CustomerName" name="CustomerName" required>
+                                <input type="text" class="form-control" id="CustomerName" name="CustomerName" value="@ViewBag.UserName" required>
                             </div>
                             <div class="form-group">
                                 <label for="phoneNumber">Số điện thoại:</label>
-                                <input type="text" class="form-control" id="Phone" name="Phone" required>
+                                <input type="text" class="form-control" id="Phone" name="Phone" value="@ViewBag.Phone" required>
                             </div>
                             <div class="form-group">
                                 <label for="address">Địa chỉ:</label>
@@ -63,7 +63,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="email">Email:</label>
-                                <input type="email" class="form-control" id="Email" name="Email" required>
+                                <input type="email" class="form-control" id="Email" name="Email" value="@ViewBag.Email" required>
                                 <div id="result"></div>
                             </div>
                             <div class="form-group">
@@ -140,9 +140,8 @@
                 showToast('Đặt hàng thành công');
             } else {
                 $('.main-content').empty();
-
                 $('<div>').addClass('col-md-12 alert alert-warning').text('Đặt hàng thất bại').appendTo('.main-content');
-
+                $('<div>').addClass('col-md-12 alert alert-warning').text(rs.msg).appendTo('.main-content');
             }
         }
 

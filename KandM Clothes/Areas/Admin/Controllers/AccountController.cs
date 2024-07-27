@@ -12,8 +12,8 @@ using System.Web.Mvc;
 
 namespace KandM_Clothes.Areas.Admin.Controllers
 {
-    public class AccountController : Controller
-    {
+	public class AccountController : Controller
+	{
 		private ApplicationSignInManager _signInManager;
 		private ApplicationUserManager _userManager;
 		private ApplicationDbContext _dbContext = new ApplicationDbContext();
@@ -74,7 +74,7 @@ namespace KandM_Clothes.Areas.Admin.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FullName = model.FullName, Phone = model.Phone };
+				var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FullName = model.FullName, Phone = model.Phone, RoleId = model.Role };
 				var result = await UserManager.CreateAsync(user, model.Password);
 				if (result.Succeeded)
 				{
@@ -93,7 +93,7 @@ namespace KandM_Clothes.Areas.Admin.Controllers
 					/*await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);*/
 
 					// Redirect or other actions
-					return RedirectToAction("Index", "Home");
+					return RedirectToAction("Index", "Account");
 				}
 				AddErrors(result);
 			}
@@ -106,10 +106,10 @@ namespace KandM_Clothes.Areas.Admin.Controllers
 
 		// GET: Admin/Account
 		public ActionResult Index()
-        {
+		{
 			var items = _dbContext.Users.ToList();
 			return View(items);
-        }
+		}
 
 		private void AddErrors(IdentityResult result)
 		{
@@ -209,26 +209,19 @@ namespace KandM_Clothes.Areas.Admin.Controllers
 				userOld.FullName = user.FullName;
 				userOld.Phone = user.Phone;
 				userOld.Email = user.Email;
+				userOld.RoleId = user.RoleId;
 
-				// Lấy role cũ
-				var roleOld = userOld.Roles;
-				var role = user.Roles;
-				// Nếu role cũ khác role mới
-				if (roleOld != role)
-				{
-					// Xóa role cũ
-					UserManager.RemoveFromRole(user.Id, _dbContext.Roles.Find(roleOld).Name);
+				UserManager.RemoveFromRole(user.Id, _dbContext.Roles.Find(userOld.RoleId).Name);
 
-					// Thêm role mới
-					UserManager.AddToRole(user.Id, _dbContext.Roles.Find(role).Name);
-				}
+				UserManager.AddToRole(user.Id, _dbContext.Roles.Find(user.RoleId).Name);
 
 				_dbContext.SaveChanges();
-			return RedirectToAction("Index", "Home");
+				ViewBag.ResultEdit = true;
+				return RedirectToAction("Index", "Account");
 			}
 			ViewBag.Roles = new SelectList(_dbContext.Roles.ToList(), "Id", "Name");
-			return RedirectToAction("Index", "Home");
-		}	
+			return RedirectToAction("Index", "Account");
+		}
 
 		[HttpPost]
 		public ActionResult Delete(string id)

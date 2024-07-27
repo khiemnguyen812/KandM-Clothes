@@ -80,5 +80,38 @@ namespace KandM_Clothes.Controllers
             var items = _dbContext.Products.Where(x => x.isActive && x.IsHot).ToList();
             return PartialView("_Partial_BestSeller", items);
         }
-    }
+
+		public ActionResult Partial_RecommendedProduct(int id)
+		{
+			var product = _dbContext.Products.Find(id);
+			if (product == null)
+			{
+				return HttpNotFound();
+			}
+
+			var items = _dbContext.Products
+								   .Where(x => x.isActive && x.ProductCategoryId == product.ProductCategoryId && x.Id != id)
+								   .ToList();
+
+			if (items.Count < 10)
+			{
+				int itemsNeeded = 10 - items.Count;
+
+				var itemIds = items.Select(x => x.Id).ToList(); // Extract the IDs of the products you already have
+
+				var additionalItems = _dbContext.Products
+												 .Where(x => x.isActive && !itemIds.Contains(x.Id)) // Use IDs for comparison
+												 .OrderBy(r => Guid.NewGuid()) // Randomize
+												 .Take(itemsNeeded)
+												 .ToList();
+
+				items.AddRange(additionalItems);
+			}
+
+			items = items.Take(10).ToList();
+
+			return PartialView("_Partial_RecommendedProduct", items);
+		}
+
+	}
 }
