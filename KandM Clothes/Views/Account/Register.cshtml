@@ -1,4 +1,5 @@
 ﻿@model KandM_Clothes.Models.RegisterViewModel
+@using Microsoft.Owin.Security
 @{
     ViewBag.Title = "Register";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -8,12 +9,75 @@
     .vertical-spacing > * {
         margin-bottom: 15px; /* Adjust the margin as needed */
     }
+
+    .socials-row {
+        display: flex;
+        gap: 10px;
+    }
+
+        .socials-row img {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        .socials-row > a {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            width: 100%;
+            min-height: 2.75rem;
+            display: flex;
+            gap: 0.75rem;
+            color: var(--text);
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            font-size: 1.1rem;
+            color: var(--text);
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            transition: all .3s ease;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 1px 4px 0px;
+        }
+
+            .socials-row > a svg {
+                color: var(--text)
+            }
+
+            .socials-row > a:hover {
+                background-color: var(--btn-bg);
+            }
 </style>
 
 <div class="container" style="margin-top:160px">
     <div class="row">
         <div class="col-md-12">
             <h2 id="title">@ViewBag.Title.</h2>
+            @{
+                var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
+                if (loginProviders.Count() == 0)
+                {
+                    <div>
+                        <button type="button" class="btn btn-primary" id="btnGoogle" onclick="location.href='@Url.Action("ExternalLogin", "Account", new { provider = "Google" })'">Login with Google</button>
+                    </div>
+                }
+                else
+                {
+                    using (Html.BeginForm("ExternalLogin", "Account", FormMethod.Post, new { id = "externalLoginForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div id="socialLoginList">
+                            <p>
+                                @foreach (AuthenticationDescription p in loginProviders)
+                                {
+                                    <button type="submit" class="btn btn-default" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="@p.AuthenticationType">@p.AuthenticationType</button>
+                                }
+                            </p>
+                        </div>
+                    }
+                }
+            }
+
+
 
             @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form" }))
             {
@@ -21,6 +85,18 @@
                 @Html.HiddenFor(m => m.Role, new { Value = ViewBag.CustomerRole })
                 <h4>Create a new account.</h4>
                 <hr />
+                <div class="socials-row vertical-spacing">
+
+                    <a href="@Url.Action("ExternalLogin", "Account", new { provider = "Google", returnUrl = "/" })" title="Use Google" style="color: black;">
+                        <img src="~/Content/assets/images/google.png" alt="Google" />
+                        Continue with Google
+                    </a>
+                    <a href="#" title="Use Apple" style="color:black">
+                        <img src="~/Content/assets/images/apple.png" alt="Apple" />
+                        Continue with Apple
+                    </a>
+                </div>
+
                 @Html.ValidationSummary("", new { @class = "text-danger" })
                 <div class="row vertical-spacing">
                     @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 col-form-label" })
@@ -42,6 +118,12 @@
                     </div>
                 </div>
                 <div class="row vertical-spacing">
+                    @Html.LabelFor(m => m.Phone, new { @class = "col-md-2 col-form-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="row vertical-spacing">
                     @Html.LabelFor(m => m.Password, new { @class = "col-md-2 col-form-label" })
                     <div class="col-md-10">
                         @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
@@ -53,21 +135,20 @@
                         @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
                     </div>
                 </div>
+
                 <div class="row vertical-spacing">
                     <div class="offset-md-2 col-md-10">
                         <input type="submit" value="Register" class="btn btn-outline-dark" />
                     </div>
                 </div>
+
+
+
             }
         </div>
     </div>
 </div>
 
-
-
 @section scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <script>
-        console.log('@ViewBag.CustomerRole');
-    </script>
 }

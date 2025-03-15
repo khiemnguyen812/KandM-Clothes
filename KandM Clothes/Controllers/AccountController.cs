@@ -18,6 +18,7 @@ namespace KandM_Clothes.Controllers
 		private ApplicationSignInManager _signInManager;
 		private ApplicationUserManager _userManager;
 		private ApplicationDbContext _AppDomain = new ApplicationDbContext();
+
 		public AccountController()
 		{
 		}
@@ -482,6 +483,7 @@ namespace KandM_Clothes.Controllers
 				context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
 			}
 		}
+
 		#endregion
 	}
 }
