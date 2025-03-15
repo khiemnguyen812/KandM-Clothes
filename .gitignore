@@ -18,7 +18,7 @@ mono_crash.*
 
 # Sensitive files
 KandM Clothes/App_Start/Startup.Auth.cs
-
+Web.config
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
