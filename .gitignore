@@ -16,9 +16,12 @@
 # Mono auto generated files
 mono_crash.*
 
+<<<<<<< HEAD
 # Sensitive files
 KandM Clothes/App_Start/Startup.Auth.cs
 Web.config
+=======
+>>>>>>> 185e6a2b0b732e08402f1072e23c85d35c58e60c
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

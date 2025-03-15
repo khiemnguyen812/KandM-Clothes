@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # KandM Clothes - E-commerce Web Application
 
 KandM Clothes is a full-featured e-commerce web application built with ASP.NET MVC, Entity Framework, and Bootstrap. This application provides a complete online shopping platform for clothing products.
@@ -194,3 +195,11 @@ For detailed API documentation, please refer to the API documentation provided i
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+=======
+# KandM Clothes
+
+A personal project to both learn and practice knowledge about ASP.Net.
+
+## Technologies and Tools 
+ASP.Net, SQL Server, JQuery, AJAX, C#
+>>>>>>> 185e6a2b0b732e08402f1072e23c85d35c58e60c
